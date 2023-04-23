@@ -22,7 +22,6 @@ class Login extends Component {
   }
 
   async validacao() {
-    console.log("passou validação")
     await firebase
       .auth()
       .signInWithEmailAndPassword(this.state.email, this.state.senha)
