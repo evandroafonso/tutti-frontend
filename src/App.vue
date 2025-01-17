@@ -1,9 +1,7 @@
 <template>
   <div id="app">
     <!-- Cabeçalho -->
-    <header class="app-header">
-      <h1>Plataforma Educacional</h1>
-    </header>
+    <Header />
 
     <!-- Conteúdo da página -->
     <main class="app-content">
@@ -11,121 +9,68 @@
     </main>
 
     <!-- Rodapé -->
-    <footer class="app-footer">
-      <p>&copy; 2025 Plataforma Educacional. Todos os direitos reservados.</p>
-    </footer>
+    <Footer />
   </div>
 </template>
 
 <script>
+import Header from "./components/Header.vue"; // Importa o componente Header
+import Footer from "./components/Footer.vue"; // Importa o componente Footer
+
 export default {
   name: "App",
+  components: {
+    Header,
+    Footer,
+  },
 };
 </script>
 
 <style>
-/* Estilo principal do app */
-#app {
+/* Reset de estilos padrão */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%; /* Garante que o corpo tenha 100% da altura da janela */
+}
+
+/* Estilização geral */
+body {
+  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
   background-color: #f6f8fa;
-  color: #24292f;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
   display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* Altura mínima da tela inteira */
+  flex-direction: column; /* Define layout flex vertical */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; /* Garante que o layout ocupe pelo menos a altura total da janela */
 }
 
+#app {
+  display: flex;
+  flex-direction: column; /* Garante alinhamento vertical para o cabeçalho, conteúdo e rodapé */
+  flex: 1; /* Expande o app para ocupar o restante do espaço do body */
+}
+
+/* Conteúdo principal */
 .app-content {
-  flex: 1; /* Faz o conteúdo crescer para ocupar o espaço restante */
+  flex: 1; /* Garante que o conteúdo principal ocupe o espaço restante entre cabeçalho e rodapé */
+  padding: 2rem;
 }
 
-/* Cabeçalho */
-.app-header {
-  background-color: #1f2328;
-  color: #ffffff;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #d0d7de;
+/* Links */
+a {
+  color: #0366d6;
+  text-decoration: none;
 }
 
-.app-header h1 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-}
-
-/* Conteúdo principal *
-
-/* Seção da imagem (esquerda) */
-.image-section {
-  flex: 1;
-  max-width: 50%;
-}
-
-.image-section img {
-  width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Seção do formulário (direita) */
-.form-section {
-  flex: 1;
-  max-width: 400px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Rodapé */
-.app-footer {
-  background-color: #1f2328;
-  color: #ffffff;
-  padding: 10px;
-  text-align: center;
-  border-top: 1px solid #d0d7de;
-}
-
-.app-footer p {
-  margin: 0;
-  font-size: 14px;
-  color: #adbac7;
-}
-
-/* Responsividade */
-@media (max-width: 100%) {
-  .app-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-    gap: 20px;
-  }
-
-  @media (max-width: 768px) {
-    .app-content {
-      flex-direction: column;
-    }
-  }
-
-  .image-section {
-    max-width: 80%;
-    margin-bottom: 20px;
-  }
-
-  .form-section {
-    width: 100%;
-    max-width: 90%;
-  }
-
-  .app-header h1 {
-    font-size: 20px;
-  }
-
-  .app-footer p {
-    font-size: 12px;
-  }
+a:hover {
+  text-decoration: underline;
 }
 </style>
