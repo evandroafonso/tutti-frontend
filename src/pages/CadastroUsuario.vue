@@ -33,17 +33,6 @@
           </div>
 
           <div class="form-group">
-            <label for="cidade">Cidade</label>
-            <input
-              type="text"
-              id="cidade"
-              v-model="form.cidade"
-              placeholder="Digite sua cidade"
-              required
-            />
-          </div>
-
-          <div class="form-group">
             <label for="senha">Senha</label>
             <input
               type="password"
@@ -98,4 +87,138 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+/* Container geral */
+.register-container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  background-color: #f6f8fa;
+}
+
+/* Imagem à esquerda */
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-section img {
+  max-width: 10%;
+  height: 10%;
+}
+
+/* Formulário à direita */
+.form-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.register-card {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  min-width: 300px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #1f2328;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #586069;
+  margin-bottom: 0.5rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5da;
+  border-radius: 4px;
+  background-color: #fafbfc;
+  color: #24292e;
+  transition: border-color 0.2s ease-in-out;
+}
+
+input:focus {
+  border-color: #0366d6;
+  outline: none;
+  background-color: #ffffff;
+}
+
+button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #2ea44f;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #22863a;
+}
+
+button:active {
+  background-color: #176f2c;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(34, 134, 58, 0.3);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .register-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .image-section {
+    flex: none;
+    height: 200px;
+    background-color: #24292e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-section img {
+    max-width: 50%;
+    height: auto;
+  }
+
+  .form-section {
+    padding: 1rem;
+  }
+
+  .register-card {
+    padding: 1.5rem;
+    max-width: 90%;
+    min-width: unset;
+  }
+}
+</style>

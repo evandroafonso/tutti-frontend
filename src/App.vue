@@ -63,14 +63,4 @@ body {
   flex: 1; /* Garante que o conteúdo principal ocupe o espaço restante entre cabeçalho e rodapé */
   padding: 2rem;
 }
-
-/* Links */
-a {
-  color: #0366d6;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
 </style>
