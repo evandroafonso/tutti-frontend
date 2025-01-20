@@ -89,11 +89,13 @@ export default {
 
 <style scoped>
 /* Container geral */
+
 .register-container {
   display: flex;
   flex-direction: row;
-  height: 100vh;
   background-color: #f6f8fa;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Imagem à esquerda */
@@ -105,7 +107,7 @@ export default {
 }
 
 .image-section img {
-  max-width: 10%;
+  width: 10%;
   height: 10%;
 }
 
@@ -115,7 +117,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 2rem;
 }
 
 .register-card {
@@ -130,14 +131,14 @@ export default {
 
 h2 {
   font-size: 1.5rem;
-  font-weight: 500;
+  font-weight: 400;
   color: #1f2328;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 }
 
 label {

@@ -61,6 +61,6 @@ body {
 /* Conteúdo principal */
 .app-content {
   flex: 1; /* Garante que o conteúdo principal ocupe o espaço restante entre cabeçalho e rodapé */
-  padding: 2rem;
+  padding: 1rem;
 }
 </style>
