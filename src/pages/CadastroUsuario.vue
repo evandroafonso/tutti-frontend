@@ -2,7 +2,7 @@
   <div class="register-container">
     <!-- Imagem à esquerda -->
     <div class="image-section">
-      <img src=".././assets/vue.svg" alt="Música" />
+      <img src=".././assets/music.svg" alt="Música" />
     </div>
 
     <!-- Formulário à direita -->
@@ -103,12 +103,10 @@ export default {
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .image-section img {
-  width: 10%;
-  height: 10%;
+  width: 30%;
 }
 
 /* Formulário à direita */
@@ -200,15 +198,12 @@ button:focus {
 
   .image-section {
     flex: none;
-    height: 200px;
-    background-color: #24292e;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .image-section img {
-    max-width: 50%;
     height: auto;
   }
 
