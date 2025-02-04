@@ -6,7 +6,7 @@
       <a href="/quem-somos">Quem somos</a>
       <a href="/planos">Planos</a>
       <a href="/cadastro">Cadastre-se</a>
-      <a href="/entrar" class="btn-entrar">Entrar</a>
+      <a href="/login" class="btn-entrar">Entrar</a>
     </nav>
   </header>
 </template>

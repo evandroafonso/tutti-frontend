@@ -1,14 +1,10 @@
 <template>
   <div class="register-container">
-    <!-- Imagem à esquerda -->
-    <div class="image-section">
-      <img src=".././assets/music.svg" alt="Música" />
-    </div>
 
     <!-- Formulário à direita -->
     <div class="form-section">
       <div class="register-card">
-        <h2>Criar uma conta</h2>
+        <h2>Entrar</h2>
         <form @submit.prevent="submitForm">
           <div class="form-group">
             <label for="nome">Nome Completo</label>
@@ -43,18 +39,7 @@
             />
           </div>
 
-          <div class="form-group">
-            <label for="confirmSenha">Confirmar Senha</label>
-            <input
-              type="password"
-              id="confirmSenha"
-              v-model="form.confirmSenha"
-              placeholder="Confirme sua senha"
-              required
-            />
-          </div>
-
-          <button type="submit">Cadastrar</button>
+          <button type="submit">Login</button>
         </form>
       </div>
     </div>
@@ -68,20 +53,13 @@ export default {
       form: {
         nome: "",
         email: "",
-        cidade: "",
         senha: "",
-        confirmSenha: "",
       },
     };
   },
   methods: {
     submitForm() {
-      if (this.form.senha !== this.form.confirmSenha) {
-        alert("As senhas não coincidem!");
-        return;
-      }
-      alert("Cadastro realizado com sucesso!");
-      // Aqui você pode adicionar a lógica para enviar os dados ao backend.
+      console.log(this.form);
     },
   },
 };
@@ -97,14 +75,6 @@ export default {
   justify-content: center;
   align-items: center;
   min-height: 10vh;
-}
-
-/* Imagem à esquerda */
-.image-section {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* Centraliza a imagem vertical/horizontal dentro da section */
 }
 
 .image-section img {
@@ -195,17 +165,6 @@ button:focus {
 @media (max-width: 768px) {
   .register-container {
     flex-direction: column;
-    height: auto;
-  }
-
-  .image-section {
-    flex: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .image-section img {
     height: auto;
   }
 

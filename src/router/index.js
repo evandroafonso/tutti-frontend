@@ -1,7 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
 import CadastroUsuario from ".././pages/CadastroUsuario.vue";
+import Login from ".././pages/Login.vue";
 
-const routes = [{ path: "/cadastro", component: CadastroUsuario }];
+
+const routes = [
+  { 
+    path: "/cadastro", 
+    component: CadastroUsuario 
+  },
+  { 
+    path: "/login", 
+    component: Login 
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),
