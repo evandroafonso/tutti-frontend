@@ -19,6 +19,5 @@ export default {
   text-align: center;
   padding: 1rem;
   font-size: 0.875rem;
-  border-top: 1px solid #e1e4e8;
 }
 </style>

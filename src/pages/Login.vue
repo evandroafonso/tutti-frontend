@@ -70,41 +70,30 @@ export default {
 
 .register-container {
   display: flex;
-  flex-direction: row;
-  background-color: #f6f8fa;
   justify-content: center;
-  align-items: center;
-  min-height: 10vh;
 }
 
-.image-section img {
-  width: 30%;
-}
-
-/* Formulário à direita */
 .form-section {
-  flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
 .register-card {
   background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 6px;
+  padding: 1.25rem;
+  border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 400px;
-  min-width: 300px;
 }
 
 h2 {
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 600;
   color: #1f2328;
   margin-bottom: 1rem;
   text-align: center;
+
 }
 
 .form-group {
@@ -130,7 +119,7 @@ input {
 }
 
 input:focus {
-  border-color: #0366d6;
+  border-color: #4444;
   outline: none;
   background-color: #ffffff;
 }

@@ -121,7 +121,7 @@ export default {
 
 .register-card {
   background-color: #ffffff;
-  padding: 2rem;
+  padding: 1.25rem;
   border-radius: 6px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 100%;
