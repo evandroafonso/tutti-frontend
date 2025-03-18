@@ -1,170 +1,48 @@
-<template>
-  <div class="register-container">
-
-    <!-- Formulário à direita -->
-    <div class="form-section">
-      <div class="register-card">
-        <h2>Entrar</h2>
-        <form @submit.prevent="submitForm">
-          <div class="form-group">
-            <label for="nome">Nome Completo</label>
-            <input
-              type="text"
-              id="nome"
-              v-model="form.nome"
-              placeholder="Digite seu nome"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="email">E-mail</label>
-            <input
-              type="email"
-              id="email"
-              v-model="form.email"
-              placeholder="Digite seu e-mail"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label for="senha">Senha</label>
-            <input
-              type="password"
-              id="senha"
-              v-model="form.senha"
-              placeholder="Digite sua senha"
-              required
-            />
-          </div>
-
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      form: {
-        nome: "",
-        email: "",
-        senha: "",
-      },
-    };
-  },
-  methods: {
-    submitForm() {
-      console.log(this.form);
-    },
-  },
-};
+<script setup>
+import GuestLayout from "../components/GuestLayout.vue";
+console.log(GuestLayout);
 </script>
 
-<style scoped>
-/* Container geral */
+<template>
+  <GuestLayout>
+    <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Acesse sua conta</h2>
 
-.register-container {
-  display: flex;
-  justify-content: center;
-}
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+      <form class="space-y-6" action="#" method="POST">
+        <div>
+          <label for="email" class="block text-sm/6 font-medium text-gray-900">E-mail</label>
+          <div class="mt-2">
+            <input type="email" name="email" id="email" autocomplete="email" required="" class="block w-full rounded-md border border-gray-400 bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-stone-100 sm:text-sm/6" />
+          </div>
+        </div>
 
-.form-section {
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-}
+        <div>
+          <div class="flex items-center justify-between">
+            <label for="password" class="block text-sm/6 font-medium text-gray-900">Senha</label>
 
-.register-card {
-  background-color: #ffffff;
-  padding: 1.25rem;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+          </div>
+          <div class="mt-2">
+            <input type="password" name="password" id="password" autocomplete="current-password" required="" class="block w-full rounded-md border border-gray-400  bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6" />
+          </div>
+          <div class="text-sm">
+            <a href="#" class="font-semibold text-green-600 hover:text-green-500">Esqueceu sua senha?</a>
+          </div>
+        </div>
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #1f2328;
-  margin-bottom: 1rem;
-  text-align: center;
+        <div>
+          <button type="submit" class="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Sign in</button>
+        </div>
+      </form>
 
-}
+      <p class="mt-10 text-center text-sm/6 text-gray-500">
+        Não possui cadastro?
+        {{ ' ' }}
+        <RouterLink :to="{ name: 'Signup' }" href="#" class="font-semibold text-green-600 hover:text-green-500">
+          Acesse aqui seu conteúdo gratuíto
+        </RouterLink>
+      </p>
+    </div>
+  </GuestLayout>
+</template>
 
-.form-group {
-  margin-bottom: 10px;
-}
-
-label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #586069;
-  margin-bottom: 0.5rem;
-}
-
-input {
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 0.875rem;
-  border: 1px solid #d1d5da;
-  border-radius: 4px;
-  background-color: #fafbfc;
-  color: #24292e;
-  transition: border-color 0.2s ease-in-out;
-}
-
-input:focus {
-  border-color: #4444;
-  outline: none;
-  background-color: #ffffff;
-}
-
-button {
-  margin-top: 1rem; /* Ajuste conforme a distância desejada */
-  width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #ffffff;
-  background-color: #2ea44f;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-button:hover {
-  background-color: #22863a;
-}
-
-button:active {
-  background-color: #176f2c;
-}
-
-button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(34, 134, 58, 0.3);
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  .register-container {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .form-section {
-    padding: 1rem;
-  }
-
-  .register-card {
-    padding: 1.5rem;
-    max-width: 90%;
-    min-width: unset;
-  }
-}
-</style>
+<style scoped></style>
