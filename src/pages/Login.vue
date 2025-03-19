@@ -30,7 +30,7 @@ console.log(GuestLayout);
         </div>
 
         <div>
-          <button type="submit" class="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Sign in</button>
+          <button type="submit" class="flex w-full justify-center rounded-md bg-green-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">Login</button>
         </div>
       </form>
 
@@ -38,7 +38,7 @@ console.log(GuestLayout);
         Não possui cadastro?
         {{ ' ' }}
         <RouterLink :to="{ name: 'Signup' }" href="#" class="font-semibold text-green-600 hover:text-green-500">
-          Acesse aqui seu conteúdo gratuíto
+          Acesse o conteúdo gratuíto
         </RouterLink>
       </p>
     </div>

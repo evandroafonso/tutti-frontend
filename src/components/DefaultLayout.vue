@@ -13,7 +13,7 @@
         <div class="flex h-16 items-center justify-between">
           <!-- Logo -->
           <div class="shrink-0">
-            <img class="size-8" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=emerald&shade=300" alt="Your Company" />
+            <MusicalNoteIcon class="size-8 text-emerald-500" />
           </div>
 
           <!-- Itens do Header alinhados à direita -->
@@ -106,7 +106,7 @@
 
 <script setup>
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, XMarkIcon, MusicalNoteIcon } from '@heroicons/vue/24/solid'
 import { RouterLink, RouterView } from 'vue-router'
 
 const user = {

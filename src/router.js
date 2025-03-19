@@ -5,6 +5,7 @@ import MyImages from "./pages/MyImages.vue";
 import Login from "./pages/Login.vue";
 import Signup from "./pages/Signup.vue";
 import NotFound from "./pages/NotFound.vue";
+import Class from "./pages/Class.vue";
 
 const routes = [
   {
@@ -29,6 +30,11 @@ const routes = [
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: NotFound,
+  },
+  {
+    path: "/classes",
+    name: "Class",
+    component: Class,
   },
 ];   
 
