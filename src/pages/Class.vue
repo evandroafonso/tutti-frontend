@@ -1,81 +1,139 @@
 <template>
-  <div class="min-h-full">
-    <!--header-->
-    <DefaultHeader :user="user" :navigation="navigation" :userNavigation="userNavigation" />
-
-    <!--título da página-->
-    <header class="bg-white shadow-sm">
-      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">Aulas</h1>
+  <div class="bg-gray-100 min-h-screen flex flex-col">
+    <Disclosure as="nav" class="bg-white shadow-sm">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <div class="shrink-0">
+            <MusicalNoteIcon class="size-8 text-emerald-500" />
+          </div>
+          <div class="hidden md:block">
+            <div class="flex items-baseline space-x-4">
+              <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-gray-700 hover:bg-emerald-400 hover:text-white rounded-md px-3 py-1 text-sm font-medium transition-colors">
+                {{ item.name }}
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
-    </header>
+    </Disclosure>
 
-    <main class="flex mx-auto max-w-6x1 lg:px-20">
-      <!--menu lateral-->
-      <aside class="w-64 bg-white p-4">
-        <h2 class="text-gray-800 text-lg font-semibold mb-4">Aulas</h2>
-        <ul class="space-y-2">
-          <li v-for="lesson in lessons" :key="lesson.id" @click="selectedLesson = lesson" class="cursor-pointer font-medium p-2 hover:text-green-600 text-gray-800">
-            {{ lesson.title }}
+    <div class="flex flex-1 overflow-hidden">
+      <aside class="w-64 bg-white text-gray-700">
+        <div class="p-4">
+          <h1 class="text-2xl font-bold">Aulas</h1>
+        </div>
+        <ul class="py-2">
+          <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 cursor-pointer hover:bg-gray-100 transition duration-300 font-semibold">
+            <span :style="{ color: aulaSelecionada?.id === aula.id ? 'green' : 'black' }">
+              {{ aula.titulo }}
+            </span>
           </li>
         </ul>
       </aside>
-      <!--conteúdo das aulas-->
-      <section class="flex-1 p-6 overflow-y-auto">
-        <h2 v-if="selectedLesson" class="text-xl font-bold mb-2">{{ selectedLesson.title }}</h2>
-        <p v-if="selectedLesson">{{ selectedLesson.content }}</p>
-        <div v-if="selectedLesson" class="mt-4">
-          <h3 class="text-lg font-semibold">Comentários</h3>
-          <textarea v-model="newComment" class="w-full border p-2" placeholder="Adicione um comentário..."></textarea>
-          <button @click="addComment" class="mt-2 bg-green-500 text-white px-4 py-2 rounded">Enviar</button>
-          <ul class="mt-4">
-            <li v-for="(comment, index) in selectedLesson.comments" :key="index" class="border-b py-2">
-              {{ comment }}
-            </li>
-          </ul>
+
+      <!-- Adicionando overflow-y-auto para permitir scroll -->
+      <main v-if="aulaSelecionada" class="flex-1 p-8 overflow-y-auto h-screen">
+        <h2 class="text-3xl font-bold mb-4 text-gray-800">{{ aulaSelecionada?.titulo }}</h2>
+        <p class="text-gray-700 mb-4">{{ aulaSelecionada?.texto }}</p>
+
+        <div class="mb-6" v-if="aulaSelecionada?.videoUrl">
+          <iframe width="100%" height="315" :src="aulaSelecionada?.videoUrl" title="Vídeo da Aula" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
-      </section>
-    </main>
+
+        <section class="mt-8">
+          <h3 class="text-2xl font-semibold mb-4 text-gray-800">Comentários</h3>
+          <div v-for="comentario in comentarios" :key="comentario.id" class="mb-4 p-4 bg-white rounded-md shadow-sm">
+            <p class="font-semibold text-gray-800">{{ comentario.nome }}</p>
+            <p class="text-gray-600">{{ comentario.texto }}</p>
+          </div>
+          <div class="bg-white p-6 rounded-md shadow-md">
+            <h4 class="text-lg font-semibold mb-3 text-gray-800">Adicionar Comentário</h4>
+            <form @submit.prevent="adicionarComentario">
+              <div class="mb-3">
+                <label for="nome" class="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
+                <input type="text" id="nome" v-model="novoComentario.nome" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              </div>
+              <div class="mb-4">
+                <label for="comentario" class="block text-gray-700 text-sm font-bold mb-2">Comentário:</label>
+                <textarea id="comentario" v-model="novoComentario.texto" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+              </div>
+              <button type="submit" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors">Enviar Comentário</button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <main v-else class="flex-1 p-8 flex items-center justify-center">
+        <p class="text-gray-500 text-lg">Selecione uma aula para ver o conteúdo.</p>
+      </main>
+    </div>
   </div>
 </template>
 
-<script setup>
+<script>
 import { ref } from 'vue';
-import { Disclosure, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
-import DefaultHeader from '../components/HeaderDefault.vue';
+import { Disclosure } from '@headlessui/vue';
+import { MusicalNoteIcon } from '@heroicons/vue/24/solid';
 
-const user = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-};
+export default {
+  components: {
+    Disclosure,
+    MusicalNoteIcon,
+  },
+  setup() {
+    const user = ref({
+      name: 'Usuário',
+      imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    });
 
-const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  { name: 'Team', href: '#', current: false },
-  { name: 'Projects', href: '#', current: false },
-  { name: 'Menu Principal', href: '#', current: false },
-  { name: 'Reports', href: '#', current: false }
-];
+    const navigation = ref([
+      { name: 'Início', href: '#' },
+      { name: 'Aulas', href: '#' },
+      { name: 'Exercícios', href: '#' },
+      { name: 'Progresso', href: '#' },
+    ]);
 
-const userNavigation = [
-  { name: 'Seu Perfil', href: '#' },
-  { name: 'Sair', href: '#' }
-];
+    const aulas = ref([
+      { id: 1, titulo: 'Introdução ao Vue 3', texto: 'Esta aula apresenta os conceitos básicos do Vue 3.', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+      { id: 2, titulo: 'Componentes no Vue 3', texto: 'Aprenda a criar e usar componentes no Vue 3.', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+      { id: 3, titulo: 'Diretivas e Eventos no Vue 3', texto: 'Explore as diretivas e eventos no Vue 3.', videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ' },
+    ]);
 
-const lessons = ref([
-  { id: 1, title: 'Aula 1', content: 'Conteúdo da Aula 1', comments: [] },
-  { id: 2, title: 'Aula 2', content: 'Conteúdo da Aula 2', comments: [] }
-]);
-const selectedLesson = ref(null);
-const newComment = ref('');
+    const comentarios = ref([
+      { id: 1, nome: 'João', texto: 'Ótima aula!' },
+      { id: 2, nome: 'Maria', texto: 'Gostei muito!' },
+    ]);
 
-const addComment = () => {
-  if (selectedLesson.value && newComment.value) {
-    selectedLesson.value.comments.push(newComment.value);
-    newComment.value = '';
-  }
+    const novoComentario = ref({ nome: '', texto: '' });
+    const aulaSelecionada = ref(null);
+
+    const selecionarAula = (aula) => {
+      aulaSelecionada.value = aula;
+    };
+
+    const adicionarComentario = () => {
+      if (novoComentario.value.nome.trim() && novoComentario.value.texto.trim()) {
+        comentarios.value.push({
+          id: comentarios.value.length + 1,
+          nome: novoComentario.value.nome,
+          texto: novoComentario.value.texto,
+        });
+        novoComentario.value = { nome: '', texto: '' };
+      } else {
+        alert('Por favor, preencha nome e comentário!');
+      }
+    };
+
+    return {
+      user,
+      navigation,
+      aulas,
+      comentarios,
+      novoComentario,
+      aulaSelecionada,
+      selecionarAula,
+      adicionarComentario,
+    };
+  },
 };
 </script>
-
-<style scoped></style>
