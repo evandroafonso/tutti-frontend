@@ -23,11 +23,11 @@
       <!-- Sidebar: em mobile, quando aberta ocupa 100% da tela; em desktop, fica fixa -->
       <aside :class="[
         isMobileMenuOpen ? 'flex w-full' : 'hidden',
-        'lg:flex lg:w-80 bg-white text-gray-700 flex flex-col h-screen',
+        'lg:flex lg:w-80 lg:pt-0 flex flex-col bg-white text-gray-700 transition-all duration-300',
         'h-[calc(100vh-4rem)] lg:h-screen'
       ]">
         <!-- Conteúdo da Sidebar -->
-        <div class="p-4 flex flex-col items-center w-full">
+        <div class="p-2 flex flex-col items-center w-full">
           <div class="flex items-center w-full relative">
             <!-- Ícone Musical removido em mobile (exibe somente em desktop) -->
             <MusicalNoteIcon class="w-10 h-10 text-green-600 mx-auto hidden lg:block" />
