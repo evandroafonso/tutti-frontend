@@ -1,17 +1,40 @@
 <template>
-  <div class="bg-white min-h-screen flex flex-col">
-    <div class="flex flex-1 overflow-hidden">
-      <!-- Sidebar: visível no desktop (lg) e controlada via botão fixo no mobile -->
-      <aside :class="[isMobileMenuOpen ? 'flex' : 'hidden lg:flex', 'w-80 bg-white text-gray-700 flex-col h-screen transition-all duration-300']">
-        <!-- Header (Menu) -->
+  <div class="min-h-screen flex flex-col">
+    <!-- Header fixo para mobile (apenas dispositivos móveis) -->
+    <header class="fixed top-0 left-0 right-0 z-20 bg-white shadow p-4 lg:hidden">
+      <div class="relative flex items-center justify-center">
+        <!-- Botão de toggle posicionado à esquerda -->
+        <button @click="toggleMenu" class="absolute left-4 focus:outline-none">
+          <template v-if="isMobileMenuOpen">
+            <!-- Ícone "X" para fechar -->
+            <XMarkIcon class="w-6 h-6 text-gray-600" />
+          </template>
+          <template v-else>
+            <!-- Ícone de sanduíche para abrir -->
+            <Bars3Icon class="w-6 h-6 text-gray-600" />
+          </template>
+        </button>
+        <!-- Ícone Musical centralizado no header -->
+        <MusicalNoteIcon class="w-8 h-8 text-green-600" />
+      </div>
+    </header>
+
+    <div class="flex flex-1 pt-16 lg:pt-0">
+      <!-- Sidebar: em mobile, quando aberta ocupa 100% da tela; em desktop, fica fixa -->
+      <aside :class="[
+        isMobileMenuOpen ? 'flex w-full' : 'hidden',
+        'lg:flex lg:w-80 bg-white text-gray-700 flex flex-col h-screen',
+        'h-[calc(100vh-4rem)] lg:h-screen'
+      ]">
+        <!-- Conteúdo da Sidebar -->
         <div class="p-4 flex flex-col items-center w-full">
           <div class="flex items-center w-full relative">
-            <MusicalNoteIcon class="size-10 text-green-600 mx-auto" />
+            <!-- Ícone Musical removido em mobile (exibe somente em desktop) -->
+            <MusicalNoteIcon class="w-10 h-10 text-green-600 mx-auto hidden lg:block" />
           </div>
-          <h1 class="text-2xl font-bold text-green-400 self-start mt-2">Aulas</h1>
         </div>
 
-        <!-- Menu de Aulas -->
+        <!-- Menu de Aulas (Flexível para ocupar o espaço disponível) -->
         <ul class="py-2 flex-1 overflow-y-auto">
           <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 cursor-pointer hover:bg-gray-100 transition duration-300 font-semibold">
             <span :class="aulaSelecionada?.id === aula.id ? 'text-green-500' : 'text-gray-700'">
@@ -20,26 +43,14 @@
           </li>
         </ul>
 
-        <!-- Footer (Informações do Usuário) -->
+        <!-- Footer fixo na parte inferior -->
         <div class="p-4 border-t border-gray-200 flex items-center gap-3">
-          <UserCircleIcon class="size-8 text-gray-600 mb-2" />
+          <UserCircleIcon class="w-8 h-8 text-gray-600" />
           <span class="text-gray-700 font-semibold">User</span>
         </div>
       </aside>
 
-      <!-- Botão de toggle fixo na lateral esquerda para mobile (mesmo posicionamento em ambos os estados) -->
-      <div class="lg:hidden fixed left-0 top-1/2 transform -translate-y-1/2 z-10">
-        <button @click="toggleMenu" class="p-2 rounded-full shadow-md bg-white bg-opacity-75">
-          <template v-if="isMobileMenuOpen">
-            <!-- Quando a aba está aberta, seta apontando para a esquerda -->
-            <ArrowLeftIcon class="w-5 h-5 text-gray-500 opacity-75" />
-          </template>
-          <template v-else>
-            <!-- Quando a aba está fechada, seta apontando para a direita -->
-            <ArrowRightIcon class="w-5 h-5 text-gray-500 opacity-75" />
-          </template>
-        </button>
-      </div>
+
 
       <!-- Conteúdo Principal -->
       <main v-if="aulaSelecionada" class="bg-gray-100 border-r flex-1 p-8 overflow-y-auto h-screen">
@@ -88,32 +99,17 @@
 
 <script>
 import { ref } from 'vue';
-import { Disclosure } from '@headlessui/vue';
-import { MusicalNoteIcon } from '@heroicons/vue/24/solid';
-import { UserCircleIcon, ArrowLeftIcon, ArrowRightIcon } from '@heroicons/vue/24/outline';
+import { MusicalNoteIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 
 export default {
   components: {
-    Disclosure,
     MusicalNoteIcon,
     UserCircleIcon,
-    ArrowLeftIcon,
-    ArrowRightIcon,
+    Bars3Icon,
+    XMarkIcon,
   },
   setup() {
-    const user = ref({
-      name: 'Usuário',
-      imageUrl:
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    });
-
-    const navigation = ref([
-      { name: 'Início', href: '#' },
-      { name: 'Aulas', href: '#' },
-      { name: 'Exercícios', href: '#' },
-      { name: 'Progresso', href: '#' },
-    ]);
-
     const aulas = ref([
       {
         id: 1,
@@ -146,7 +142,7 @@ export default {
 
     const selecionarAula = (aula) => {
       aulaSelecionada.value = aula;
-      // Opcional: fecha o menu em mobile após selecionar uma aula
+      // Em mobile, opcionalmente fechar o menu após selecionar a aula
       isMobileMenuOpen.value = false;
     };
 
@@ -168,8 +164,6 @@ export default {
     };
 
     return {
-      user,
-      navigation,
       aulas,
       comentarios,
       novoComentario,
