@@ -1,87 +1,85 @@
 <template>
-  <div class="min-h-screen flex flex-col">
-    <!-- Header fixo para mobile (apenas dispositivos móveis) -->
-    <header class="fixed top-0 left-0 right-0 z-20 bg-white shadow p-4 lg:hidden">
+  <div class="min-h-screen flex flex-col dark:bg-gray-900">
+    <!-- Header Mobile -->
+    <header class="fixed top-0 left-0 right-0 z-20 bg-white shadow p-4 lg:hidden dark:bg-gray-800">
       <div class="relative flex items-center justify-center">
-        <!-- Botão de toggle posicionado à esquerda -->
         <button @click="toggleMenu" class="absolute left-4 focus:outline-none">
           <template v-if="isMobileMenuOpen">
-            <!-- Ícone "X" para fechar -->
-            <XMarkIcon class="w-6 h-6 text-gray-600" />
+            <XMarkIcon class="w-6 h-6 text-gray-600 dark:text-gray-300" />
           </template>
           <template v-else>
-            <!-- Ícone de sanduíche para abrir -->
-            <Bars3Icon class="w-6 h-6 text-gray-600" />
+            <Bars3Icon class="w-6 h-6 text-gray-600 dark:text-gray-300" />
           </template>
         </button>
-        <!-- Ícone Musical centralizado no header -->
-        <MusicalNoteIcon class="w-8 h-8 text-green-600" />
+        <MusicalNoteIcon class="w-8 h-8 text-green-600 dark:text-green-400" />
       </div>
     </header>
 
     <div class="flex flex-1 pt-16 lg:pt-0">
-      <!-- Sidebar: em mobile, quando aberta ocupa 100% da tela; em desktop, fica fixa -->
+      <!-- Sidebar -->
       <aside :class="[
         isMobileMenuOpen ? 'flex w-full' : 'hidden',
         'lg:flex lg:w-80 lg:pt-0 flex flex-col bg-white text-gray-700 transition-all duration-300',
-        'h-[calc(100vh-4rem)] lg:h-screen'
+        'h-[calc(100vh-4rem)] lg:h-screen dark:bg-gray-800 dark:text-gray-300'
       ]">
         <!-- Conteúdo da Sidebar -->
         <div class="p-2 flex flex-col items-center w-full">
           <div class="flex items-center w-full relative">
-            <!-- Ícone Musical removido em mobile (exibe somente em desktop) -->
-            <MusicalNoteIcon class="w-10 h-10 text-green-600 mx-auto hidden lg:block" />
+            <MusicalNoteIcon class="w-10 h-10 text-green-600 mx-auto hidden lg:block dark:text-green-400" />
           </div>
         </div>
 
-        <!-- Menu de Aulas (Flexível para ocupar o espaço disponível) -->
         <ul class="py-2 flex-1 overflow-y-auto">
-          <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 cursor-pointer hover:bg-gray-100 transition duration-300 font-semibold">
-            <span :class="aulaSelecionada?.id === aula.id ? 'text-green-500' : 'text-gray-700'">
+          <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 cursor-pointer hover:bg-gray-100 transition duration-300 font-semibold dark:hover:bg-gray-700">
+            <span :class="aulaSelecionada?.id === aula.id
+              ? 'text-green-500 dark:text-green-400'
+              : 'text-gray-700 dark:text-gray-300'">
               {{ aula.titulo }}
             </span>
           </li>
         </ul>
 
-        <!-- Footer fixo na parte inferior -->
-        <div class="p-4 border-t border-gray-200 flex items-center gap-3">
-          <UserCircleIcon class="w-8 h-8 text-gray-600" />
-          <span class="text-gray-700 font-semibold">User</span>
+        <!-- Footer Sidebar + Botão Dark Mode Desktop -->
+        <div class="p-4 border-t border-gray-200 flex items-center gap-3 dark:border-gray-700">
+          <UserCircleIcon class="w-8 h-8 text-gray-600 dark:text-gray-300" />
+          <span class="text-gray-700 font-semibold dark:text-gray-300">User</span>
+          <button @click="toggleDarkMode" class="ml-auto focus:outline-none">
+            <SunIcon v-if="darkMode" class="w-6 h-6 text-gray-600 dark:text-gray-300" />
+            <MoonIcon v-else class="w-6 h-6 text-gray-600 dark:text-gray-300" />
+          </button>
         </div>
       </aside>
 
-
-
       <!-- Conteúdo Principal -->
-      <main v-if="aulaSelecionada" class="bg-gray-100 border-r flex-1 p-8 overflow-y-auto h-screen">
-        <div class="bg-white p-4 mb-2 rounded-2xl">
-          <h2 class="text-3xl font-bold mb-4 text-gray-800">{{ aulaSelecionada?.titulo }}</h2>
-          <p class="text-gray-700 mb-4">{{ aulaSelecionada?.texto }}</p>
+      <main v-if="aulaSelecionada" class="bg-gray-200 border-r flex-1 p-8 overflow-y-auto h-screen dark:bg-gray-900">
+        <div class="bg-white p-4 mb-2 rounded-2xl dark:bg-gray-800">
+          <h2 class="text-3xl font-bold mb-4 text-gray-800 dark:text-gray-200">{{ aulaSelecionada?.titulo }}</h2>
+          <p class="text-gray-700 mb-4 dark:text-gray-300">{{ aulaSelecionada?.texto }}</p>
 
           <div class="mb-10" v-if="aulaSelecionada?.videoUrl">
             <div class="max-w-4xl mx-auto aspect-video rounded-md overflow-hidden">
-              <iframe class="w-full h-full" :src="aulaSelecionada.videoUrl" title="Vídeo da Aula" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              <iframe class="w-full h-full" :src="aulaSelecionada.videoUrl" title="Vídeo da Aula" frameborder="0" allowfullscreen></iframe>
             </div>
           </div>
 
           <section class="mt-8">
-            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Comentários</h3>
-            <div v-for="comentario in comentarios" :key="comentario.id" class="mb-4 p-4 bg-white rounded-md shadow-sm">
-              <p class="font-semibold text-gray-800">{{ comentario.nome }}</p>
-              <p class="text-gray-600">{{ comentario.texto }}</p>
+            <h3 class="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Comentários</h3>
+            <div v-for="comentario in comentarios" :key="comentario.id" class="mb-4 p-4 bg-gray-100 rounded-md shadow-sm dark:bg-gray-700">
+              <p class="font-semibold text-gray-800 dark:text-gray-200">{{ comentario.nome }}</p>
+              <p class="text-gray-600 dark:text-gray-300">{{ comentario.texto }}</p>
             </div>
-            <div class="bg-white p-6 rounded-md shadow-md">
-              <h4 class="text-lg font-semibold mb-3 text-gray-800">Adicionar Comentário</h4>
+            <div class="bg-gray-100 p-6 rounded-md shadow-md dark:bg-gray-700">
+              <h4 class="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-200">Adicionar Comentário</h4>
               <form @submit.prevent="adicionarComentario">
                 <div class="mb-3">
-                  <label for="nome" class="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
-                  <input type="text" id="nome" v-model="novoComentario.nome" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                  <label class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300">Nome:</label>
+                  <input type="text" v-model="novoComentario.nome" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600" />
                 </div>
                 <div class="mb-4">
-                  <label for="comentario" class="block text-gray-700 text-sm font-bold mb-2">Comentário:</label>
-                  <textarea id="comentario" v-model="novoComentario.texto" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                  <label class="block text-gray-700 text-sm font-bold mb-2 dark:text-gray-300">Comentário:</label>
+                  <textarea v-model="novoComentario.texto" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600"></textarea>
                 </div>
-                <button type="submit" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors">
+                <button type="submit" class="bg-emerald-500 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors dark:bg-emerald-600 dark:hover:bg-emerald-800">
                   Enviar Comentário
                 </button>
               </form>
@@ -90,8 +88,8 @@
         </div>
       </main>
 
-      <main v-else class="flex-1 p-8 flex items-center justify-center">
-        <p class="text-gray-500 text-lg">Selecione uma aula para ver o conteúdo.</p>
+      <main v-else class="flex-1 p-8 flex items-center justify-center dark:bg-gray-900">
+        <p class="text-gray-500 text-lg dark:text-gray-400">Selecione uma aula para ver o conteúdo.</p>
       </main>
     </div>
   </div>
@@ -100,7 +98,7 @@
 <script>
 import { ref } from 'vue';
 import { MusicalNoteIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
-import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
+import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
 
 export default {
   components: {
@@ -108,8 +106,11 @@ export default {
     UserCircleIcon,
     Bars3Icon,
     XMarkIcon,
+    SunIcon,
+    MoonIcon,
   },
   setup() {
+    const darkMode = ref(false);
     const aulas = ref([
       {
         id: 1,
@@ -159,6 +160,15 @@ export default {
       }
     };
 
+    const toggleDarkMode = () => {
+      darkMode.value = !darkMode.value;
+      if (darkMode.value) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    };
+
     const toggleMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
     };
@@ -172,6 +182,8 @@ export default {
       adicionarComentario,
       isMobileMenuOpen,
       toggleMenu,
+      darkMode,
+      toggleDarkMode,
     };
   },
 };
