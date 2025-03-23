@@ -6,7 +6,6 @@ console.log(GuestLayout);
 <template>
   <GuestLayout>
     <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Acesse sua conta</h2>
-
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
       <form class="space-y-6" action="#" method="POST">
         <div>
