@@ -3,7 +3,7 @@
     <!-- Header Mobile -->
     <header class="fixed top-0 left-0 right-0 z-20 bg-white shadow p-4 lg:hidden dark:bg-gray-800">
       <div class="gap-2 relative flex items-center justify-center">
-        <button @click="toggleMenu" class="absolute left-4 focus:outline-none">
+        <button @click="toggleMenu" class="absolute left-4 focus:outline-none" :aria-label="isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'">
           <template v-if="isMobileMenuOpen">
             <XMarkIcon class="w-6 h-6 text-gray-600 dark:text-gray-300" />
           </template>
@@ -47,7 +47,8 @@
         <div class="p-4 border-t border-gray-200 flex items-center gap-3 dark:border-gray-700">
           <UserCircleIcon class="w-8 h-8 text-gray-600 dark:text-gray-300" />
           <span class="text-gray-700 font-semibold dark:text-gray-300">User</span>
-          <button @click="toggleDarkMode" class="ml-auto focus:outline-none">
+
+          <button @click="toggleDarkMode" class="ml-auto focus:outline-none" :aria-label="darkMode ? 'Ativar modo claro' : 'Ativar modo escuro'">
             <SunIcon v-if="darkMode" class="w-6 h-6 text-gray-600 dark:text-gray-300" />
             <MoonIcon v-else class="w-6 h-6 text-gray-600 dark:text-gray-300" />
           </button>
