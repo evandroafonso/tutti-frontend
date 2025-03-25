@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col dark:bg-gray-900">
     <!-- Header Mobile -->
     <header class="fixed top-0 left-0 right-0 z-20 bg-white shadow p-4 lg:hidden dark:bg-gray-800">
-      <div class="relative flex items-center justify-center">
+      <div class="gap-2 relative flex items-center justify-center">
         <button @click="toggleMenu" class="absolute left-4 focus:outline-none">
           <template v-if="isMobileMenuOpen">
             <XMarkIcon class="w-6 h-6 text-gray-600 dark:text-gray-300" />
@@ -12,6 +12,7 @@
           </template>
         </button>
         <MusicalNoteIcon class="w-8 h-8 text-green-600 dark:text-green-400" />
+        <h1 class="text-2xl text-gray-700 font-semibold dark:text-gray-300">Tutti</h1>
       </div>
     </header>
 
@@ -23,14 +24,17 @@
         'h-[calc(100vh-4rem)] lg:h-screen dark:bg-gray-800 dark:text-gray-300'
       ]">
         <!-- Conteúdo da Sidebar -->
-        <div class="p-2 flex flex-col items-center w-full">
-          <div class="flex items-center w-full relative">
-            <MusicalNoteIcon class="w-10 h-10 text-green-600 mx-auto hidden lg:block dark:text-green-400" />
+        <div class="hidden lg:flex p-2 flex-col items-center w-full border-b border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-center w-full relative">
+            <MusicalNoteIcon class="w-10 h-10 text-green-600 mx-2 hidden lg:block dark:text-green-400" />
+            <h1 class="text-2xl text-gray-700 font-semibold dark:text-gray-300">Tutti</h1>
           </div>
         </div>
-
         <ul class="py-2 flex-1 overflow-y-auto">
-          <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 cursor-pointer hover:bg-gray-100 transition duration-300 font-semibold dark:hover:bg-gray-700">
+          <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 cursor-pointer transition duration-300 font-semibold" :class="{
+            'bg-gray-100 dark:bg-gray-700': aulaSelecionada?.id === aula.id,
+            'hover:bg-gray-100 dark:hover:bg-gray-700': true
+          }">
             <span :class="aulaSelecionada?.id === aula.id
               ? 'text-green-500 dark:text-green-400'
               : 'text-gray-700 dark:text-gray-300'">
