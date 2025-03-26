@@ -2,13 +2,11 @@
 </script>
 
 <template>
-    <GuestLayout>
+  <GuestLayout>
     Images
   </GuestLayout>
 </template>
 
 
 
-<style>
-
-</style>
+<style></style>
