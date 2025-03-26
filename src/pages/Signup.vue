@@ -11,7 +11,7 @@ const data = ref({
 });
 
 function submit() {
-  axiosClient.post("/user", data.value)
+  axiosClient.post("/users", data.value)
 }
 
 </script>

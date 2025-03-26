@@ -12,7 +12,6 @@ const axiosClient = axios.create({
 //});
 
 axiosClient.interceptors.response.use((response) => {
-  console.log(response);
   return response;
 }, error => {
   if (error.response && error.response.status === 401) {
@@ -20,5 +19,4 @@ axiosClient.interceptors.response.use((response) => {
   }
   throw error;
 })
-console.log(import.meta.env.VITE_API_BASE_URL);
 export default axiosClient;
