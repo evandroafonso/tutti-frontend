@@ -6,16 +6,22 @@ const axiosClient = axios.create({
   withCredentials: true,
   withXSRFToken: true,
 });
-//axiosClient.interceptors.request.use((config) => {
-//  config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
-//  return config;
-//});
 
-axiosClient.interceptors.response.use((response) => {
-  return response;
-}, error => {
+axiosClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  console.log("TOKEN: ", token);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+axiosClient.interceptors.response.use((response) => response, (error) => {
   if (error.response && error.response.status === 401) {
-    router.push({name: 'Login'});
+    console.log(error)
+    alert(error.response.data.message);
+    localStorage.removeItem("token");
+    router.push({ name: "Login" });
   }
   throw error;
 })

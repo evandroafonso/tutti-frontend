@@ -12,6 +12,9 @@ const data = ref({
 
 function submit() {
   axiosClient.post("/users", data.value)
+    .catch(error => {
+      alert(error.response.data.message);
+    });
 }
 
 </script>

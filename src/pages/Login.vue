@@ -12,8 +12,13 @@ const data = ref({
 function submit() {
   axiosClient.post("/auth/login", data.value)
     .then(response => {
+      localStorage.setItem("token", response.data.token);
+      console.log("LOCALSTORAGE: ", localStorage)
       router.push({ name: "Classes" });
-    })
+    }).catch(error => {
+      console.log(error);
+      alert(error.response.data.message);
+    });
 }
 
 </script>

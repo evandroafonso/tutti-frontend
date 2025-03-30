@@ -1,20 +1,29 @@
 import {createRouter, createWebHistory} from "vue-router";
 import DefaultLayout from "./components/DefaultLayout.vue";
 import Home from "./pages/Home.vue";
-import MyImages from "./pages/MyImages.vue";
 import Login from "./pages/Login.vue";
 import Signup from "./pages/Signup.vue";
 import NotFound from "./pages/NotFound.vue";
 import Class from "./pages/Class.vue";
+import useUserStore from "./store/user.js";
 
 const routes = [
   {
     path: "/",
-    component: DefaultLayout,
     children: [
       {path: "/",name: "Home", component: Home},
-      {path: "/images",name: "MyImages", component: MyImages},  
-    ]
+      {path: "/classes",name: "Classes", component: Class},
+
+    ],
+    beforeEnter: async (to, from, next) => {
+      try {
+        const userStore = useUserStore();
+        await userStore.fetchUser();
+        next();
+      } catch (error) {
+        next(false);
+      }
+    },
   },
   {
     path: "/login",
@@ -30,12 +39,7 @@ const routes = [
     path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: NotFound,
-  },
-  {
-    path: "/classes",
-    name: "Classes",
-    component: Class,
-  },
+  }
 ];   
 
 const router = createRouter({
