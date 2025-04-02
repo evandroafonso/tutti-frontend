@@ -1,28 +1,3 @@
-<script setup>
-import GuestLayout from "../components/GuestLayout.vue";
-import { ref } from "vue";
-import axiosClient from "../axios.js";
-import router from "../router";
-
-const data = ref({
-  email: "",
-  password: "",
-});
-
-function submit() {
-  axiosClient.post("/auth/login", data.value)
-    .then(response => {
-      localStorage.setItem("token", response.data.token);
-      console.log("LOCALSTORAGE: ", localStorage)
-      router.push({ name: "Classes" });
-    }).catch(error => {
-      console.log(error);
-      alert(error.response.data.message);
-    });
-}
-
-</script>
-
 <template>
   <GuestLayout>
     <h2 class="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9">Acesse sua conta</h2>
@@ -63,5 +38,31 @@ function submit() {
     </div>
   </GuestLayout>
 </template>
+
+<script setup>
+import GuestLayout from "../components/GuestLayout.vue";
+import { ref } from "vue";
+import axiosClient from "../axios.js";
+import router from "../router";
+
+const data = ref({
+  email: "",
+  password: "",
+});
+
+function submit() {
+  localStorage.removeItem("token");
+  axiosClient.post("/auth/login", data.value)
+    .then(response => {
+      localStorage.setItem("token", response.data.token);
+      console.log("LOCALSTORAGE: ", localStorage)
+      router.push({ name: "Classes" });
+    }).catch(error => {
+      console.log(error);
+      alert(error.response.data.message);
+    });
+}
+
+</script>
 
 <style scoped></style>

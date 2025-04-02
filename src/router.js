@@ -5,6 +5,7 @@ import Login from "./pages/Login.vue";
 import Signup from "./pages/Signup.vue";
 import NotFound from "./pages/NotFound.vue";
 import Class from "./pages/Class.vue";
+import ClassRegister from "./pages/ClassRegister.vue";
 import useUserStore from "./store/user.js";
 
 const routes = [
@@ -13,7 +14,7 @@ const routes = [
     children: [
       {path: "/",name: "Home", component: Home},
       {path: "/classes",name: "Classes", component: Class},
-
+      {path: "/register-class",name: "ClassRegister", component: ClassRegister},
     ],
     beforeEnter: async (to, from, next) => {
       try {
