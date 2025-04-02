@@ -78,7 +78,7 @@
               </div>
               <select v-model="selectedCategory" required class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600">
                 <option value="" disabled>Selecione uma categoria</option>
-                <option v-for="(cat, index) in categories" :key="index" :value="cat">{{ cat }}</option>
+                <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.description }}</option>
               </select>
             </div>
             <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-800">Registrar Aula</button>
@@ -108,10 +108,11 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import axiosClient from "../axios.js"; // Certifique-se que esse arquivo está exportando o axiosClient corretamente.
+import { ref, onMounted } from 'vue';
+import axiosClient from "../axios.js"; // Certifique-se de que o axiosClient está exportado corretamente.
 import { MusicalNoteIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
+import { useDarkMode } from '../composables/useDarkMode';
 
 export default {
   components: {
@@ -124,7 +125,6 @@ export default {
   },
   setup() {
     // Estados para dark mode e menu mobile
-    const darkMode = ref(false);
     const isMobileMenuOpen = ref(false);
 
     // Lista de aulas e aula selecionada
@@ -142,6 +142,8 @@ export default {
     // Estados para o modal de nova categoria
     const isCategoryModalOpen = ref(false);
     const newCategoryModalName = ref('');
+    const { darkMode, toggleDarkMode } = useDarkMode();
+
 
     // Função para registrar nova aula
     const registerClass = () => {
@@ -167,16 +169,6 @@ export default {
     const selectClass = (classe) => {
       selectedClass.value = classe;
       isMobileMenuOpen.value = false;
-    };
-
-    // Alternar dark mode
-    const toggleDarkMode = () => {
-      darkMode.value = !darkMode.value;
-      if (darkMode.value) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
     };
 
     // Alternar menu mobile
@@ -220,6 +212,25 @@ export default {
         alert('Erro ao criar categoria');
       }
     };
+
+    // Função para buscar as categorias do backend
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosClient.get('/class-category/list');
+        categories.value = response.data.map(cat => ({
+          id: cat.id,
+          description: cat.description
+        }));
+      } catch (error) {
+        console.error('Erro ao buscar categorias:', error);
+        alert('Erro ao carregar categorias');
+      }
+    };
+
+    // Carrega o dark mode e as categorias ao montar o componente
+    onMounted(() => {
+      fetchCategories();
+    });
 
     return {
       darkMode,

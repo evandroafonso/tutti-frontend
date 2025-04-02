@@ -101,9 +101,10 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { MusicalNoteIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
+import { useDarkMode } from '../composables/useDarkMode';
 
 export default {
   components: {
@@ -115,7 +116,6 @@ export default {
     MoonIcon,
   },
   setup() {
-    const darkMode = ref(false);
     const aulas = ref([
       {
         id: 1,
@@ -145,6 +145,8 @@ export default {
     const novoComentario = ref({ nome: '', texto: '' });
     const aulaSelecionada = ref(aulas.value[0]);
     const isMobileMenuOpen = ref(false);
+    const { darkMode, toggleDarkMode } = useDarkMode();
+
 
     const selecionarAula = (aula) => {
       aulaSelecionada.value = aula;
@@ -165,14 +167,13 @@ export default {
       }
     };
 
-    const toggleDarkMode = () => {
-      darkMode.value = !darkMode.value;
-      if (darkMode.value) {
+    onMounted(() => {
+      const savedDarkMode = localStorage.getItem('darkMode');
+      if (savedDarkMode === 'true') {
+        darkMode.value = true;
         document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
       }
-    };
+    });
 
     const toggleMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
