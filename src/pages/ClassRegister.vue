@@ -60,7 +60,7 @@
         <!-- Display selected class details -->
 
         <!-- Admin Form: New Class Registration -->
-        <div class="p-6 bg-white shadow-md rounded-2xl dark:bg-gray-800">
+        <div class="p-6 bg-white rounded-md shadow-md dark:bg-gray-800">
           <h2 class="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-200">Registrar Nova Aula</h2>
           <form @submit.prevent="registerClass">
             <div class="mb-4">
@@ -85,7 +85,7 @@
           </form>
         </div>
 
-        <div v-if="selectedClass" class="p-4 mb-4 bg-white rounded-2xl dark:bg-gray-800">
+        <div v-if="selectedClass" class="p-4 mt-6 mb-4 bg-white rounded-md dark:bg-gray-800">
           <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">{{ selectedClass.titulo }}</h2>
           <p class="mb-4 text-gray-700 dark:text-gray-300">{{ selectedClass.texto }}</p>
           <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ selectedClass.categoria }}</p>

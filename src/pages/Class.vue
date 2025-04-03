@@ -57,12 +57,12 @@
 
       <!-- Conteúdo Principal -->
       <main v-if="aulaSelecionada" class="flex-1 h-screen p-8 overflow-y-auto bg-gray-200 border-r dark:bg-gray-900">
-        <div class="p-4 mb-2 bg-white rounded-2xl dark:bg-gray-800">
+        <div class="p-6 mb-2 bg-white rounded-md dark:bg-gray-800">
           <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">{{ aulaSelecionada?.titulo }}</h2>
           <p class="mb-4 text-gray-700 dark:text-gray-300">{{ aulaSelecionada?.texto }}</p>
 
           <div class="mb-10" v-if="aulaSelecionada?.videoUrl">
-            <div class="max-w-4xl mx-auto overflow-hidden rounded-md aspect-video">
+            <div class="max-w-4xl mx-auto overflow-hidden rounded-lg aspect-video">
               <iframe class="w-full h-full" :src="aulaSelecionada.videoUrl" title="Vídeo da Aula" frameborder="0" allowfullscreen></iframe>
             </div>
           </div>
