@@ -216,7 +216,7 @@ export default {
     // Função para buscar as categorias do backend
     const fetchCategories = async () => {
       try {
-        const response = await axiosClient.get('/class-category/list');
+        const response = await axiosClient.get('/class-category/list-all');
         categories.value = response.data.map(cat => ({
           id: cat.id,
           description: cat.description
