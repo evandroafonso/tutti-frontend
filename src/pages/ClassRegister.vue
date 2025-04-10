@@ -78,10 +78,10 @@
               </div>
               <select v-model="selectedCategory" required class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600">
                 <option value="" disabled>Selecione uma categoria</option>
-                <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.description }}</option>
+                <option v-for="cat in categories" :key="cat.description" :value="cat.description">{{ cat.description }}</option>
               </select>
             </div>
-            <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-800">Registrar Aula</button>
+            <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-800">Cadastrar Aula</button>
           </form>
         </div>
 
@@ -144,25 +144,31 @@ export default {
     const newCategoryModalName = ref('');
     const { darkMode, toggleDarkMode } = useDarkMode();
 
-
-    // Função para registrar nova aula
-    const registerClass = () => {
+    // Função para registrar nova aula via POST usando axiosClient
+    const registerClass = async () => {
       if (!newTitle.value.trim() || !newText.value.trim() || !selectedCategory.value) {
         alert('Por favor, preencha todos os campos.');
         return;
       }
       const newClass = {
-        id: classes.value.length + 1,
-        titulo: newTitle.value.trim(),
-        texto: newText.value.trim(),
-        categoria: selectedCategory.value,
+        title: newTitle.value.trim(),
+        content: newText.value.trim(),
+        classCategory: selectedCategory.value,
       };
       console.log('Registrando nova aula:', newClass);
-      classes.value.push(newClass);
-      newTitle.value = '';
-      newText.value = '';
-      selectedCategory.value = '';
-      selectedClass.value = newClass;
+      try {
+        const response = await axiosClient.post('/class-content', newClass);
+        console.log('Aula registrada com sucesso:', response.data);
+        // Adiciona a nova aula à lista
+        classes.value.push(response.data);
+        // Limpa os campos do formulário
+        newTitle.value = '';
+        newText.value = '';
+        selectedCategory.value = '';
+        selectedClass.value = response.data;
+      } catch (error) {
+        alert('Erro ao registrar aula');
+      }
     };
 
     // Selecionar aula
@@ -178,13 +184,11 @@ export default {
 
     // Abrir modal de nova categoria
     const openCategoryModal = () => {
-      console.log('Abrindo modal de nova categoria');
       isCategoryModalOpen.value = true;
     };
 
     // Fechar modal de nova categoria
     const closeCategoryModal = () => {
-      console.log('Fechando modal de nova categoria');
       isCategoryModalOpen.value = false;
       newCategoryModalName.value = '';
     };
@@ -197,18 +201,14 @@ export default {
       }
       const categoryName = newCategoryModalName.value.trim();
       const token = localStorage.getItem('token');
-      console.log('Token obtido do localStorage:', token);
-      console.log('Criando categoria com nome:', categoryName);
       try {
         const response = await axiosClient.post('/class-category', {
           description: categoryName,
         });
-        console.log('Resposta da criação de categoria:', response.data);
         // Adiciona a nova categoria à lista
         categories.value.push(response.data.description || categoryName);
         closeCategoryModal();
       } catch (error) {
-        console.error('Erro ao criar categoria:', error);
         alert('Erro ao criar categoria');
       }
     };
@@ -222,15 +222,26 @@ export default {
           description: cat.description
         }));
       } catch (error) {
-        console.error('Erro ao buscar categorias:', error);
         alert('Erro ao carregar categorias');
       }
     };
 
-    // Carrega o dark mode e as categorias ao montar o componente
     onMounted(() => {
       fetchCategories();
     });
+
+    const data = ref({
+      title: "",
+      content: "",
+      classCategory: "",
+    });
+
+    function submit() {
+      axiosClient.post("/class-content", data.value)
+        .catch(error => {
+          alert(error.response.data.message);
+        });
+    }
 
     return {
       darkMode,

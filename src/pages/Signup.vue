@@ -1,24 +1,3 @@
-<script setup>
-import { ref } from "vue";
-import axiosClient from "../axios.js";
-import GuestLayout from "../components/GuestLayout.vue";
-
-const data = ref({
-  name: "",
-  email: "",
-  password: "",
-  passwordConfirmation: ""
-});
-
-function submit() {
-  axiosClient.post("/users", data.value)
-    .catch(error => {
-      alert(error.response.data.message);
-    });
-}
-
-</script>
-
 <template>
   <GuestLayout>
     <h2 class="mt-10 font-bold tracking-tight text-center text-gray-900 text-2xl/9">Crie sua conta</h2>
@@ -73,5 +52,26 @@ function submit() {
     </div>
   </GuestLayout>
 </template>
+
+<script setup>
+import { ref } from "vue";
+import axiosClient from "../axios.js";
+import GuestLayout from "../components/GuestLayout.vue";
+
+const data = ref({
+  name: "",
+  email: "",
+  password: "",
+  passwordConfirmation: ""
+});
+
+function submit() {
+  axiosClient.post("/users", data.value)
+    .catch(error => {
+      alert(error.response.data.message);
+    });
+}
+
+</script>
 
 <style scoped></style>

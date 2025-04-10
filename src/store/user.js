@@ -9,7 +9,6 @@ const useUserStore = defineStore('user', {
     fetchUser() {
       return axiosClient.get('/users')
         .then(({data}) => {
-          console.log(data)
           this.user = data
         })
     }
