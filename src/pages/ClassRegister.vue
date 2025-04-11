@@ -30,7 +30,7 @@
             <h1 class="text-2xl font-semibold text-gray-700 dark:text-gray-300">Tutti Admin</h1>
           </div>
         </div>
-        <!-- List of Registered Classes -->
+        <!-- Listagem de todas as aulas -->
         <ul class="flex-1 py-2 overflow-y-auto">
           <li v-for="classe in classes" :key="classe.id" @click="selectClass(classe)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
             'bg-gray-100 dark:bg-gray-700': selectedClass?.id === classe.id,
@@ -57,43 +57,56 @@
 
       <!-- Main Content -->
       <main class="flex-1 h-screen p-8 overflow-y-auto bg-gray-200 dark:bg-gray-900">
-        <!-- Display selected class details -->
-
-        <!-- Admin Form: New Class Registration -->
-        <div class="p-6 bg-white rounded-md shadow-md dark:bg-gray-800">
-          <h2 class="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-200">Registrar Nova Aula</h2>
-          <form @submit.prevent="registerClass">
-            <div class="mb-4">
-              <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Título:</label>
-              <input type="text" v-model="newTitle" required placeholder="Título da Aula" class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600" />
-            </div>
-            <div class="mb-4">
-              <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Conteúdo:</label>
-              <textarea v-model="newText" required placeholder="Conteúdo da Aula" class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600"></textarea>
-            </div>
-            <div class="mb-4">
-              <div class="flex items-center mb-2">
-                <label class="block mr-2 text-sm font-bold text-gray-700 dark:text-gray-300">Categoria:</label>
-                <button type="button" @click="openCategoryModal" class="px-2 py-1 text-white rounded bg-emerald-500 hover:bg-emerald-700 focus:outline-none">+</button>
-              </div>
-              <select v-model="selectedCategory" required class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600">
-                <option value="" disabled>Selecione uma categoria</option>
-                <option v-for="cat in categories" :key="cat.description" :value="cat.description">{{ cat.description }}</option>
-              </select>
-            </div>
-            <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-800">Cadastrar Aula</button>
-          </form>
+        <!-- Botão de Cadastro no Topo -->
+        <div class="flex items-center justify-between mb-6">
+          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-green-500 rounded hover:bg-green-700 focus:outline-none">
+            Cadastrar Nova Aula
+          </button>
         </div>
 
-        <div v-if="selectedClass" class="p-4 mt-6 mb-4 bg-white rounded-md dark:bg-gray-800">
-          <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">{{ selectedClass.titulo }}</h2>
-          <p class="mb-4 text-gray-700 dark:text-gray-300">{{ selectedClass.texto }}</p>
-          <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ selectedClass.categoria }}</p>
+        <!-- Conteúdo Principal -->
+        <div v-if="showRegistrationForm">
+          <!-- Formulário de Cadastro da Aula -->
+          <div class="p-6 bg-white rounded-md shadow-md dark:bg-gray-800">
+            <h2 class="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-200">Cadastrar Nova Aula</h2>
+            <form @submit.prevent="registerClass">
+              <div class="mb-4">
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Título:</label>
+                <input type="text" v-model="newTitle" required placeholder="Título da Aula" class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600" />
+              </div>
+              <div class="mb-4">
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Conteúdo (Markdown):</label>
+                <textarea v-model="newText" required placeholder="Conteúdo da Aula" class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600"></textarea>
+              </div>
+              <div class="mb-4">
+                <div class="flex items-center mb-2">
+                  <label class="block mr-2 text-sm font-bold text-gray-700 dark:text-gray-300">Categoria:</label>
+                  <button type="button" @click="openCategoryModal" class="px-2 py-1 text-white rounded bg-emerald-500 hover:bg-emerald-700 focus:outline-none">+</button>
+                </div>
+                <select v-model="selectedCategory" required class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600">
+                  <option value="" disabled>Selecione uma categoria</option>
+                  <option v-for="cat in categories" :key="cat.description" :value="cat.description">{{ cat.description }}</option>
+                </select>
+              </div>
+              <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-800">
+                Cadastrar Aula
+              </button>
+            </form>
+          </div>
+        </div>
+        <div v-else>
+          <!-- Exibição da Aula Selecionada ou Primeira Aula da Lista -->
+          <div v-if="selectedClassComputed" class="p-4 bg-white rounded-md dark:bg-gray-800">
+            <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">{{ selectedClassComputed.titulo }}</h2>
+            <!-- O conteúdo em Markdown é convertido para HTML utilizando o marked -->
+            <div v-html="convertedContent"></div>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ selectedClassComputed.categoria }}</p>
+          </div>
         </div>
       </main>
     </div>
 
-    <!-- Modal para criação de nova categoria -->
+    <!-- Modal para Criação de Nova Categoria -->
     <div v-if="isCategoryModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div class="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
         <h3 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-200">Nova Categoria</h3>
@@ -108,11 +121,13 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import axiosClient from "../axios.js"; // Certifique-se de que o axiosClient está exportado corretamente.
+import { ref, computed, onMounted } from 'vue';
+import classContentService from '../services/classContentService';
+import classCategoryService from '../services/classCategoryService';
 import { MusicalNoteIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
 import { useDarkMode } from '../composables/useDarkMode';
+import { marked } from 'marked';
 
 export default {
   components: {
@@ -124,6 +139,12 @@ export default {
     MoonIcon,
   },
   setup() {
+
+    marked.setOptions({
+      gfm: true,
+      breaks: true,
+    });
+
     // Estados para dark mode e menu mobile
     const isMobileMenuOpen = ref(false);
 
@@ -139,12 +160,34 @@ export default {
     const newText = ref('');
     const selectedCategory = ref('');
 
+    // Estado para controle do formulário de cadastro
+    const showRegistrationForm = ref(false);
+
     // Estados para o modal de nova categoria
     const isCategoryModalOpen = ref(false);
     const newCategoryModalName = ref('');
     const { darkMode, toggleDarkMode } = useDarkMode();
 
-    // Função para registrar nova aula via POST usando axiosClient
+    // Computed para exibir a aula selecionada ou, caso não haja, a primeira aula da lista
+    const selectedClassComputed = computed(() => {
+      return selectedClass.value || (classes.value.length ? classes.value[0] : null);
+    });
+
+    // Propriedade computada para converter o conteúdo Markdown (campo "texto") em HTML
+    const convertedContent = computed(() => {
+      if (selectedClassComputed.value && selectedClassComputed.value.texto) {
+        console.log('Texto convertido:', marked.parse("* texto")); // Log do texto convertido
+        return marked.parse("* texto");
+      }
+      return '';
+    });
+
+    // Alterna a exibição do formulário de cadastro
+    const toggleRegistrationForm = () => {
+      showRegistrationForm.value = !showRegistrationForm.value;
+    };
+
+    // Função para cadastrar nova aula e atualizar o sidebar
     const registerClass = async () => {
       if (!newTitle.value.trim() || !newText.value.trim() || !selectedCategory.value) {
         alert('Por favor, preencha todos os campos.');
@@ -152,106 +195,105 @@ export default {
       }
       const newClass = {
         title: newTitle.value.trim(),
-        content: newText.value.trim(),
+        content: newText.value.trim(), // campo "content" é enviado
         classCategory: selectedCategory.value,
       };
-      console.log('Registrando nova aula:', newClass);
       try {
-        const response = await axiosClient.post('/class-content', newClass);
-        console.log('Aula registrada com sucesso:', response.data);
-        // Adiciona a nova aula à lista
-        classes.value.push(response.data);
-        // Limpa os campos do formulário
+        await classContentService.registerClass(newClass);
+        fetchClasses();
         newTitle.value = '';
         newText.value = '';
         selectedCategory.value = '';
-        selectedClass.value = response.data;
+        showRegistrationForm.value = false;
       } catch (error) {
-        alert('Erro ao registrar aula');
+        alert(error.message);
       }
     };
 
-    // Selecionar aula
+    // Busca todas as aulas disponíveis no endpoint
+    const fetchClasses = async () => {
+      try {
+        const data = await classContentService.fetchClasses();
+        classes.value = data.map(item => ({
+          id: item.id,
+          titulo: item.title,
+          texto: item.content, // mapeia o campo "content" para "texto"
+          categoria: item.classCategory,
+        }));
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    // Selecionar aula manualmente via sidebar
     const selectClass = (classe) => {
       selectedClass.value = classe;
+      showRegistrationForm.value = false;
       isMobileMenuOpen.value = false;
     };
 
-    // Alternar menu mobile
+    // Alterna o menu mobile
     const toggleMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
     };
 
-    // Abrir modal de nova categoria
+    // Abre modal para nova categoria
     const openCategoryModal = () => {
       isCategoryModalOpen.value = true;
     };
 
-    // Fechar modal de nova categoria
+    // Fecha modal de nova categoria
     const closeCategoryModal = () => {
       isCategoryModalOpen.value = false;
       newCategoryModalName.value = '';
     };
 
-    // Função para criar nova categoria via POST usando axiosClient
+    // Cria nova categoria
     const createCategory = async () => {
       if (!newCategoryModalName.value.trim()) {
         alert('Digite o nome da categoria');
         return;
       }
       const categoryName = newCategoryModalName.value.trim();
-      const token = localStorage.getItem('token');
       try {
-        const response = await axiosClient.post('/class-category', {
-          description: categoryName,
+        const data = await classCategoryService.createCategory(categoryName);
+        categories.value.push({
+          id: data.id,
+          description: data.description,
         });
-        // Adiciona a nova categoria à lista
-        categories.value.push(response.data.description || categoryName);
         closeCategoryModal();
       } catch (error) {
-        alert('Erro ao criar categoria');
+        alert(error.message);
       }
     };
 
-    // Função para buscar as categorias do backend
+    // Busca as categorias disponíveis
     const fetchCategories = async () => {
       try {
-        const response = await axiosClient.get('/class-category/list-all');
-        categories.value = response.data.map(cat => ({
-          id: cat.id,
-          description: cat.description
-        }));
+        categories.value = await classCategoryService.fetchCategories();
       } catch (error) {
-        alert('Erro ao carregar categorias');
+        alert(error.message);
       }
     };
 
     onMounted(() => {
       fetchCategories();
+      fetchClasses();
     });
-
-    const data = ref({
-      title: "",
-      content: "",
-      classCategory: "",
-    });
-
-    function submit() {
-      axiosClient.post("/class-content", data.value)
-        .catch(error => {
-          alert(error.response.data.message);
-        });
-    }
 
     return {
       darkMode,
       isMobileMenuOpen,
       classes,
       selectedClass,
+      selectedClassComputed,
+      convertedContent,
       categories,
       newTitle,
       newText,
       selectedCategory,
+      showRegistrationForm,
+      toggleRegistrationForm,
       registerClass,
       selectClass,
       toggleDarkMode,
