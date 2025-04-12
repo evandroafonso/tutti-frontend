@@ -99,7 +99,7 @@
           <div v-if="selectedClassComputed" class="p-4 bg-white rounded-md dark:bg-gray-800">
             <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">{{ selectedClassComputed.titulo }}</h2>
             <!-- O conteúdo em Markdown é convertido para HTML utilizando o marked -->
-            <div v-html="convertedContent"></div>
+            <div v-html="convertedContent" class="prose dark:prose-invert max-w-none"></div>
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ selectedClassComputed.categoria }}</p>
           </div>
         </div>
@@ -176,8 +176,7 @@ export default {
     // Propriedade computada para converter o conteúdo Markdown (campo "texto") em HTML
     const convertedContent = computed(() => {
       if (selectedClassComputed.value && selectedClassComputed.value.texto) {
-        console.log('Texto convertido:', marked.parse("* texto")); // Log do texto convertido
-        return marked.parse("* texto");
+        return marked.parse(selectedClassComputed.value.texto);
       }
       return '';
     });
