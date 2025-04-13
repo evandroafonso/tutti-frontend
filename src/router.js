@@ -4,17 +4,15 @@ import Home from "./pages/Home.vue";
 import Login from "./pages/Login.vue";
 import Signup from "./pages/Signup.vue";
 import NotFound from "./pages/NotFound.vue";
-import Class from "./pages/Class.vue";
-import ClassRegister from "./pages/ClassRegister.vue";
 import useUserStore from "./store/user.js";
 
 const routes = [
   {
-    path: "/",
+    path: '/',
     children: [
-      {path: "/",name: "Home", component: Home},
-      {path: "/classes",name: "Classes", component: Class},
-      {path: "/register-class",name: "ClassRegister", component: ClassRegister},
+      { path: '/', name: 'Home', component: Home },
+      { path: '/classes', name: 'Classes', component: () => import('./pages/Class.vue') },
+      { path: '/register-class', name: 'ClassRegister', component: () => import('./pages/ClassRegister.vue') },
     ],
     beforeEnter: async (to, from, next) => {
       try {
@@ -27,21 +25,22 @@ const routes = [
     },
   },
   {
-    path: "/login",
-    name: "Login",
+    path: '/login',
+    name: 'Login',
     component: Login,
   },
   {
-    path: "/signup",
-    name: "Signup",
+    path: '/signup',
+    name: 'Signup',
     component: Signup,
   },
   {
-    path: "/:pathMatch(.*)*",
-    name: "NotFound",
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
     component: NotFound,
-  }
-];   
+    redirect: '/',
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(),
