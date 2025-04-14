@@ -10,7 +10,6 @@ const routes = [
   {
     path: '/',
     children: [
-      { path: '/', name: 'Home', component: Home },
       { path: '/classes', name: 'Classes', component: () => import('./pages/Class.vue') },
       { path: '/register-class', name: 'ClassRegister', component: () => import('./pages/ClassRegister.vue') },
     ],
@@ -24,6 +23,8 @@ const routes = [
       }
     },
   },
+  { path: '/', name: 'Home', component: Home },
+
   {
     path: '/login',
     name: 'Login',
