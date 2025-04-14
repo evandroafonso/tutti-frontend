@@ -10,7 +10,7 @@
           </a>
         </div>
         <div class="hidden lg:flex lg:gap-x-8">
-          <a v-for="item in navigation" :key="item.name" :href="item.href" class="font-semibold text-gray-900 text-sm/6">{{ item.name }}</a>
+          <a v-for="item in navigation" :key="item.name" :href="item.href" class="font-semibold text-gray-900 hover:text-green-500 text-sm/6">{{ item.name }}</a>
         </div>
         <div class="lg:hidden">
           <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-3 text-gray-700" @click="mobileMenuOpen = true">
@@ -77,7 +77,7 @@
       </section>
       <div class="grid items-center max-w-lg grid-cols-1 mx-auto mt-16 gap-y-6 sm:mt-20 sm:gap-y-0 lg:max-w-4xl lg:grid-cols-2">
         <div v-for="(tier, tierIdx) in tiers" :key="tier.id" :class="[
-          tier.featured ? 'bg-gradient-to-t from-green-200 to-green-500' : 'bg-white/60 sm:mx-8 lg:mx-0',
+          tier.featured ? 'bg-gradient-to-t from-stone-100 to-green-500' : 'bg-white/60 sm:mx-8 lg:mx-0',
           tier.featured
             ? ''
             : tierIdx === 0
@@ -140,7 +140,7 @@
         </div>
       </div>
     </div>
-    <div class="fixed z-50 bottom-4 right-4" style="position: sticky">
+    <div class="fixed z-50 bottom-4 right-8" style="position: sticky">
       <img ref="guitarImage" src="/passaro-guitar.svg" alt="Imagem Pássaro com Violão" class="w-20 h-20 cursor-pointer hover:animate-bounce" loading="lazy" />
     </div>
 
@@ -243,13 +243,15 @@ import { ref } from "vue";
 import { Dialog, DialogPanel } from "@headlessui/vue";
 import { Bars3Icon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { CheckIcon } from "@heroicons/vue/20/solid";
+import router from "../router";
+
 
 // Navegação principal
 const navigation = [
   { name: "Sobre nós", href: "#" },
   { name: "Preços", href: "#" },
-  { name: "Cadastre-se", href: "#" },
-  { name: "Login", href: "#" },
+  { name: "Cadastre-se", href: "/signup" },
+  { name: "Login", href: "/login" },
 ];
 
 // Estado do menu móvel
@@ -304,8 +306,6 @@ const tiers = [
   },
 ];
 
-console.log(tiers);
-// Links do rodapé
 const footerLinks = [
   {
     title: "Recursos",

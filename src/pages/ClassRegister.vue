@@ -58,9 +58,15 @@
       <!-- Main Content -->
       <main class="flex-1 h-screen p-8 overflow-y-auto bg-gray-200 dark:bg-gray-900">
         <!-- Botão de Cadastro no Topo -->
-        <div class="flex items-center justify-between mb-6">
-          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-green-500 rounded hover:bg-green-700 focus:outline-none">
+        <div class="flex items-end justify-end gap-2 mb-6">
+          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none">
             Cadastrar Nova Aula
+          </button>
+          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none">
+            Editar
+          </button>
+          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none">
+            Inativar
           </button>
         </div>
 

@@ -21,7 +21,7 @@ async function registerClass(newClass) {
  */
 async function fetchClasses() {
   try {
-    const response = await axiosClient.get('/class-content');
+    const response = await axiosClient.get('/class-content/classes');
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar aulas:', error);
