@@ -30,6 +30,7 @@
             <h1 class="text-2xl font-semibold text-gray-700 dark:text-gray-300">Tutti Admin</h1>
           </div>
         </div>
+
         <!-- Listagem de todas as aulas -->
         <ul class="flex-1 py-2 overflow-y-auto">
           <li v-for="classe in classes" :key="classe.id" @click="selectClass(classe)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
@@ -59,13 +60,22 @@
       <main class="flex-1 h-screen p-8 overflow-y-auto bg-gray-200 dark:bg-gray-900">
         <!-- Botão de Cadastro no Topo -->
         <div class="flex items-end justify-end gap-2 mb-6">
-          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-green-600 rounded hover:bg-green-700 focus:outline-none">
-            Cadastrar Nova Aula
+          <button @click="toggleRegistrationForm" :disabled="isEditing" :class="{
+            'bg-green-600 hover:bg-green-700': !isEditing,
+            'bg-gray-400 cursor-not-allowed': isEditing
+          }" class="px-4 py-2 font-bold text-white bg-green-600 rounded focus:outline-none">
+            Cadastrar
           </button>
-          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none">
+          <button @click="openEditWindow(selectedClassComputed.titulo)" :disabled="isEditing" :class="{
+            'bg-blue-600 hover:bg-blue-700': !isEditing,
+            'bg-gray-400 cursor-not-allowed': isEditing
+          }" class="px-4 py-2 font-bold text-white bg-blue-500 rounded focus:outline-none">
             Editar
           </button>
-          <button @click="toggleRegistrationForm" class="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 focus:outline-none">
+          <button @click="toggleRegistrationForm" :disabled="isEditing" :class="{
+            'bg-red-600 hover:bg-red-700': !isEditing,
+            'bg-gray-400 cursor-not-allowed': isEditing
+          }" class="px-4 py-2 font-bold text-white bg-red-500 rounded focus:outline-none">
             Inativar
           </button>
         </div>
@@ -74,39 +84,62 @@
         <div v-if="showRegistrationForm">
           <!-- Formulário de Cadastro da Aula -->
           <div class="p-6 bg-white rounded-md shadow-md dark:bg-gray-800">
-            <h2 class="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-200">Cadastrar Nova Aula</h2>
-            <form @submit.prevent="registerClass">
+            <h2 class="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-200">
+              {{ isEditing ? 'Editar Aula' : 'Cadastrar Nova Aula' }}
+            </h2>
+            <form @submit.prevent="submitForm">
+              <!-- Campo: Título -->
               <div class="mb-4">
-                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Título:</label>
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                  Título:
+                </label>
                 <input type="text" v-model="newTitle" required placeholder="Título da Aula" class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600" />
               </div>
+              <!-- Campo: Conteúdo -->
               <div class="mb-4">
-                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">Conteúdo (Markdown):</label>
-                <textarea v-model="newText" required placeholder="Conteúdo da Aula" class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600"></textarea>
+                <label class="block mb-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                  Conteúdo (Markdown):
+                </label>
+                <textarea v-model="newText" required placeholder="Conteúdo da Aula" class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600">
+            </textarea>
               </div>
+              <!-- Campo: Categoria -->
               <div class="mb-4">
                 <div class="flex items-center mb-2">
-                  <label class="block mr-2 text-sm font-bold text-gray-700 dark:text-gray-300">Categoria:</label>
-                  <button type="button" @click="openCategoryModal" class="px-2 py-1 text-white rounded bg-emerald-500 hover:bg-emerald-700 focus:outline-none">+</button>
+                  <label class="block mr-2 text-sm font-bold text-gray-700 dark:text-gray-300">
+                    Categoria:
+                  </label>
+                  <button type="button" @click="openCategoryModal" class="px-2 py-1 text-white rounded bg-emerald-500 hover:bg-emerald-700 focus:outline-none">
+                    +
+                  </button>
                 </div>
                 <select v-model="selectedCategory" required class="w-full px-3 py-2 border rounded shadow focus:outline-none focus:ring dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600">
                   <option value="" disabled>Selecione uma categoria</option>
-                  <option v-for="cat in categories" :key="cat.description" :value="cat.description">{{ cat.description }}</option>
+                  <option v-for="cat in categories" :key="cat.description" :value="cat.description">
+                    {{ cat.description }}
+                  </option>
                 </select>
               </div>
-              <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-800">
-                Cadastrar Aula
+              <!-- Botão de submit -->
+              <button type="submit" class="px-4 py-2 font-bold text-white bg-blue-500 rounded focus:outline-none hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-800">
+                {{ isEditing ? 'Salvar Alterações' : 'Cadastrar Aula' }}
               </button>
             </form>
           </div>
         </div>
+
         <div v-else>
           <!-- Exibição da Aula Selecionada ou Primeira Aula da Lista -->
           <div v-if="selectedClassComputed" class="p-4 bg-white rounded-md dark:bg-gray-800">
-            <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">{{ selectedClassComputed.titulo }}</h2>
-            <!-- O conteúdo em Markdown é convertido para HTML utilizando o marked -->
-            <div v-html="convertedContent" class="prose dark:prose-invert max-w-none"></div>
-            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ selectedClassComputed.categoria }}</p>
+            <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
+              {{ selectedClassComputed.titulo }}
+            </h2>
+            <!-- Conteúdo convertido de Markdown para HTML -->
+            <div v-html="convertedContent" class="prose dark:prose-invert max-w-none">
+            </div>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+              Categoria: {{ selectedClassComputed.categoria }}
+            </p>
           </div>
         </div>
       </main>
@@ -115,11 +148,17 @@
     <!-- Modal para Criação de Nova Categoria -->
     <div v-if="isCategoryModalOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div class="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800">
-        <h3 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-200">Nova Categoria</h3>
+        <h3 class="mb-4 text-xl font-bold text-gray-800 dark:text-gray-200">
+          Nova Categoria
+        </h3>
         <input type="text" v-model="newCategoryModalName" placeholder="Nome da Categoria" class="w-full px-3 py-2 mb-4 border rounded focus:outline-none dark:bg-gray-600 dark:text-gray-100 dark:border-gray-600" />
         <div class="flex justify-end gap-2">
-          <button type="button" @click="closeCategoryModal" class="px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none">Cancelar</button>
-          <button type="button" @click="createCategory" class="px-4 py-2 font-bold text-white rounded bg-emerald-500 hover:bg-emerald-700 focus:outline-none">Criar</button>
+          <button type="button" @click="closeCategoryModal" class="px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none">
+            Cancelar
+          </button>
+          <button type="button" @click="createCategory" class="px-4 py-2 font-bold text-white rounded bg-emerald-500 hover:bg-emerald-700 focus:outline-none">
+            Criar
+          </button>
         </div>
       </div>
     </div>
@@ -145,41 +184,36 @@ export default {
     MoonIcon,
   },
   setup() {
-
+    // Configuração do marked para conversão de Markdown
     marked.setOptions({
       gfm: true,
       breaks: true,
     });
 
-    // Estados para dark mode e menu mobile
+    // Estados para controle visual
     const isMobileMenuOpen = ref(false);
-
-    // Lista de aulas e aula selecionada
     const classes = ref([]);
     const selectedClass = ref(null);
-
-    // Lista de categorias para o select
     const categories = ref([]);
+    const showRegistrationForm = ref(false);
+    const isCategoryModalOpen = ref(false);
+    const isEditing = ref(false);
+    const editingClassId = ref(null);
 
-    // Campos para cadastro de nova aula
+    // Campos do formulário
     const newTitle = ref('');
     const newText = ref('');
     const selectedCategory = ref('');
-
-    // Estado para controle do formulário de cadastro
-    const showRegistrationForm = ref(false);
-
-    // Estados para o modal de nova categoria
-    const isCategoryModalOpen = ref(false);
     const newCategoryModalName = ref('');
+
+    // Modo escuro
     const { darkMode, toggleDarkMode } = useDarkMode();
 
-    // Computed para exibir a aula selecionada ou, caso não haja, a primeira aula da lista
+    // Computed para aula selecionada e conversão do conteúdo Markdown
     const selectedClassComputed = computed(() => {
       return selectedClass.value || (classes.value.length ? classes.value[0] : null);
     });
 
-    // Propriedade computada para converter o conteúdo Markdown (campo "texto") em HTML
     const convertedContent = computed(() => {
       if (selectedClassComputed.value && selectedClassComputed.value.texto) {
         return marked.parse(selectedClassComputed.value.texto);
@@ -187,81 +221,39 @@ export default {
       return '';
     });
 
-    // Alterna a exibição do formulário de cadastro
+    // Funções auxiliares
     const toggleRegistrationForm = () => {
       showRegistrationForm.value = !showRegistrationForm.value;
     };
 
-    // Função para cadastrar nova aula e atualizar o sidebar
-    const registerClass = async () => {
-      if (!newTitle.value.trim() || !newText.value.trim() || !selectedCategory.value) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
-      const newClass = {
-        title: newTitle.value.trim(),
-        content: newText.value.trim(), // campo "content" é enviado
-        classCategory: selectedCategory.value,
-      };
-      try {
-        await classContentService.registerClass(newClass);
-        fetchClasses();
-        newTitle.value = '';
-        newText.value = '';
-        selectedCategory.value = '';
-        showRegistrationForm.value = false;
-      } catch (error) {
-        alert(error.message);
-      }
-    };
-
-    // Busca todas as aulas disponíveis no endpoint
-    const fetchClasses = async () => {
-      try {
-        const data = await classContentService.fetchClasses();
-        classes.value = data.map(item => ({
-          id: item.id,
-          titulo: item.title,
-          texto: item.content, // mapeia o campo "content" para "texto"
-          categoria: item.classCategory,
-        }));
-      } catch (error) {
-        alert(error.message);
-      }
-    };
-
-    // Selecionar aula manualmente via sidebar
     const selectClass = (classe) => {
+      resetForm();
       selectedClass.value = classe;
       showRegistrationForm.value = false;
       isMobileMenuOpen.value = false;
     };
 
-    // Alterna o menu mobile
     const toggleMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
     };
 
-    // Abre modal para nova categoria
+    // Funções para categoria
     const openCategoryModal = () => {
       isCategoryModalOpen.value = true;
     };
 
-    // Fecha modal de nova categoria
     const closeCategoryModal = () => {
       isCategoryModalOpen.value = false;
       newCategoryModalName.value = '';
     };
 
-    // Cria nova categoria
     const createCategory = async () => {
       if (!newCategoryModalName.value.trim()) {
         alert('Digite o nome da categoria');
         return;
       }
-      const categoryName = newCategoryModalName.value.trim();
       try {
-        const data = await classCategoryService.createCategory(categoryName);
+        const data = await classCategoryService.createCategory(newCategoryModalName.value.trim());
         categories.value.push({
           id: data.id,
           description: data.description,
@@ -272,7 +264,6 @@ export default {
       }
     };
 
-    // Busca as categorias disponíveis
     const fetchCategories = async () => {
       try {
         categories.value = await classCategoryService.fetchCategories();
@@ -281,6 +272,123 @@ export default {
       }
     };
 
+    // Funções para gerenciamento de aulas
+    const registerClass = async () => {
+      if (!newTitle.value.trim() || !newText.value.trim() || !selectedCategory.value) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      const newClass = {
+        title: newTitle.value.trim(),
+        content: newText.value.trim(),
+        classCategory: selectedCategory.value,
+      };
+
+      try {
+        await classContentService.registerClass(newClass);
+        await fetchClasses();
+        newTitle.value = '';
+        newText.value = '';
+        selectedCategory.value = '';
+        showRegistrationForm.value = false;
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    const fetchClasses = async () => {
+      try {
+        const data = await classContentService.fetchClasses();
+        classes.value = data.map(item => ({
+          id: item.id,
+          titulo: item.title,
+          texto: item.content,
+          categoria: item.classCategory,
+        }));
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    const openEditWindow = async (title) => {
+      try {
+        const data = await classContentService.fetchClassesByTitle(decodeURIComponent(title));
+        const dataJson = JSON.parse(data);
+
+        selectedClass.value = {
+          id: dataJson.id,
+          titulo: dataJson.title,
+          texto: dataJson.content,
+          categoria: dataJson.classCategory,
+        };
+
+        if (selectedClass.value) {
+          newTitle.value = selectedClass.value.titulo;
+          newText.value = selectedClass.value.texto;
+          selectedCategory.value = selectedClass.value.categoria;
+          editingClassId.value = selectedClass.value.id;
+        }
+
+        isEditing.value = true;
+        showRegistrationForm.value = true;
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+
+    const submitForm = async () => {
+      if (!newTitle.value.trim() || !newText.value.trim() || !selectedCategory.value) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+      }
+
+      // Atualização em modo de edição
+      if (isEditing.value && editingClassId.value) {
+        const updatedClass = {
+          id: editingClassId.value,
+          title: newTitle.value.trim(),
+          content: newText.value.trim(),
+          classCategory: selectedCategory.value,
+        };
+
+        try {
+          await classContentService.updateClass(updatedClass);
+          await fetchClasses();
+        } catch (error) {
+          alert(error.message);
+        }
+      } else {
+        // Cadastro de nova aula
+        const newClass = {
+          title: newTitle.value.trim(),
+          content: newText.value.trim(),
+          classCategory: selectedCategory.value,
+        };
+
+        try {
+          await classContentService.registerClass(newClass);
+          await fetchClasses();
+          alert('Aula cadastrada com sucesso!');
+        } catch (error) {
+          alert(error.message);
+        }
+      }
+
+      // Limpar formulário e resetar estados
+      resetForm();
+    };
+
+    const resetForm = () => {
+      newTitle.value = '';
+      newText.value = '';
+      selectedCategory.value = '';
+      editingClassId.value = null;
+      isEditing.value = false;
+      showRegistrationForm.value = false;
+    };
+
+    // Montagem do componente
     onMounted(() => {
       fetchCategories();
       fetchClasses();
@@ -308,6 +416,9 @@ export default {
       openCategoryModal,
       closeCategoryModal,
       createCategory,
+      openEditWindow,
+      submitForm,
+      isEditing,
     };
   },
 };
