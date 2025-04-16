@@ -1,9 +1,16 @@
-<script setup>
-</script>
-
 <template>
-  <RouterView />
+  <div id="app">
+    <router-view />
+    <ToastContainer />
+  </div>
 </template>
 
-<style scoped>
-</style>
+<script>
+import ToastContainer from './components/ToastContainer.vue'
+
+export default {
+  components: { ToastContainer },
+}
+</script>
+
+<style scoped></style>

@@ -173,6 +173,8 @@ import { MusicalNoteIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
 import { useDarkMode } from '../composables/useDarkMode';
 import { marked } from 'marked';
+import toastService from '../services/toastService'
+
 
 export default {
   components: {
@@ -223,7 +225,51 @@ export default {
 
     // Funções auxiliares
     const toggleRegistrationForm = () => {
-      showRegistrationForm.value = !showRegistrationForm.value;
+      showRegistrationForm.value = true; // Garante que o formulário seja exibido.
+    };
+
+    const validateFormFields = () => {
+      if (!newTitle.value || !newText.value || !selectedCategory.value) {
+        alert('Por favor, preencha todos os campos.');
+        return false;
+      }
+      return true;
+    };
+
+    const handleClassSubmission = async (classData, isEditMode) => {
+      try {
+        if (isEditMode) {
+          await classContentService.updateClass(classData);
+        } else {
+          await classContentService.registerClass(classData);
+        }
+        await fetchClasses();
+        toastService.show('Aula atualizada com sucesso!', 'success');
+      } catch (error) {
+        toastService.show('Erro ao atualizar aula!', 'danger');
+      }
+    };
+
+    const submitForm = async () => {
+      if (!validateFormFields()) return;
+
+      const classData = {
+        id: isEditing.value ? editingClassId.value : undefined,
+        title: newTitle.value.trim(),
+        content: newText.value.trim(),
+        classCategory: selectedCategory.value,
+      };
+
+      await handleClassSubmission(classData, isEditing.value);
+    };
+
+    const resetForm = () => {
+      newTitle.value = '';
+      newText.value = '';
+      selectedCategory.value = '';
+      editingClassId.value = null;
+      isEditing.value = false;
+      showRegistrationForm.value = false;
     };
 
     const selectClass = (classe) => {
@@ -273,38 +319,14 @@ export default {
     };
 
     // Funções para gerenciamento de aulas
-    const registerClass = async () => {
-      if (!newTitle.value.trim() || !newText.value.trim() || !selectedCategory.value) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
-
-      const newClass = {
-        title: newTitle.value.trim(),
-        content: newText.value.trim(),
-        classCategory: selectedCategory.value,
-      };
-
-      try {
-        await classContentService.registerClass(newClass);
-        await fetchClasses();
-        newTitle.value = '';
-        newText.value = '';
-        selectedCategory.value = '';
-        showRegistrationForm.value = false;
-      } catch (error) {
-        alert(error.message);
-      }
-    };
-
     const fetchClasses = async () => {
       try {
         const data = await classContentService.fetchClasses();
-        classes.value = data.map(item => ({
-          id: item.id,
-          titulo: item.title,
-          texto: item.content,
-          categoria: item.classCategory,
+        classes.value = data.map(({ id, title, content, classCategory }) => ({
+          id,
+          titulo: title,
+          texto: content,
+          categoria: classCategory,
         }));
       } catch (error) {
         alert(error.message);
@@ -337,57 +359,6 @@ export default {
       }
     };
 
-    const submitForm = async () => {
-      if (!newTitle.value.trim() || !newText.value.trim() || !selectedCategory.value) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-      }
-
-      // Atualização em modo de edição
-      if (isEditing.value && editingClassId.value) {
-        const updatedClass = {
-          id: editingClassId.value,
-          title: newTitle.value.trim(),
-          content: newText.value.trim(),
-          classCategory: selectedCategory.value,
-        };
-
-        try {
-          await classContentService.updateClass(updatedClass);
-          await fetchClasses();
-        } catch (error) {
-          alert(error.message);
-        }
-      } else {
-        // Cadastro de nova aula
-        const newClass = {
-          title: newTitle.value.trim(),
-          content: newText.value.trim(),
-          classCategory: selectedCategory.value,
-        };
-
-        try {
-          await classContentService.registerClass(newClass);
-          await fetchClasses();
-          alert('Aula cadastrada com sucesso!');
-        } catch (error) {
-          alert(error.message);
-        }
-      }
-
-      // Limpar formulário e resetar estados
-      resetForm();
-    };
-
-    const resetForm = () => {
-      newTitle.value = '';
-      newText.value = '';
-      selectedCategory.value = '';
-      editingClassId.value = null;
-      isEditing.value = false;
-      showRegistrationForm.value = false;
-    };
-
     // Montagem do componente
     onMounted(() => {
       fetchCategories();
@@ -407,7 +378,7 @@ export default {
       selectedCategory,
       showRegistrationForm,
       toggleRegistrationForm,
-      registerClass,
+      submitForm,
       selectClass,
       toggleDarkMode,
       toggleMenu,
@@ -417,7 +388,6 @@ export default {
       closeCategoryModal,
       createCategory,
       openEditWindow,
-      submitForm,
       isEditing,
     };
   },

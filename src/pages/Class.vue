@@ -84,7 +84,7 @@
 
       <!-- Conteúdo Principal -->
       <main class="flex-1 h-screen p-8 ml-0 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900" v-if="aulaSelecionada">
-        <div class="p-6 mb-2 bg-white rounded-md dark:bg-gray-800">
+        <div class="p-6 mt-10 mb-2 bg-white rounded-md dark:bg-gray-800">
           <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
             {{ aulaSelecionada?.titulo }}
           </h2>
