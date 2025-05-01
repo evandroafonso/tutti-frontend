@@ -5,8 +5,6 @@
     <div class="flex">
       <SideMenu :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" @select="selecionarAula" @toggle-dark-mode="toggleDarkMode" />
 
-      <SideMenu v-if="isMobileMenuOpen" :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" :is-mobile="true" @select="selecionarAula" @close="toggleMenu" @toggle-dark-mode="toggleDarkMode" />
-
       <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900" v-if="aulaSelecionada">
         <div class="p-6 mt-12 mb-2 bg-white rounded-md sm:mt-0 dark:bg-gray-800">
           <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
@@ -16,14 +14,14 @@
           <div class="mb-8">
             <ul class="flex border-b border-gray-200 dark:border-gray-700">
               <li class="mr-2">
-                <button @click="activeTab = 'content'" :class="tabButtonClasses('content')">
+                <TabButton :is-active="activeTab === 'content'" @click="activeTab = 'content'">
                   Conteúdo
-                </button>
+                </TabButton>
               </li>
               <li class="mr-2">
-                <button @click="activeTab = 'comments'" :class="tabButtonClasses('comments')">
+                <TabButton :is-active="activeTab === 'comments'" @click="activeTab = 'comments'">
                   Comentários
-                </button>
+                </TabButton>
               </li>
             </ul>
             <div class="mt-4">
@@ -84,12 +82,14 @@ import { useClassContent } from '../composables/useClassContent';
 import { useComments } from '../composables/useComments';
 import MobileHeader from '../components/MobileHeader.vue';
 import SideMenu from '../components/SideMenu.vue';
+import TabButton from '../components/TabButton.vue';
 
 export default {
   name: 'ClassPage',
   components: {
     MobileHeader,
-    SideMenu
+    SideMenu,
+    TabButton
   },
   setup() {
     const isMobileMenuOpen = ref(false);
@@ -110,16 +110,6 @@ export default {
 
     const toggleMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
-    };
-
-    const tabButtonClasses = (tabName) => {
-      return [
-        'inline-block px-4 py-2 font-semibold',
-        activeTab.value === tabName
-          ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-          : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
-        'hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg',
-      ];
     };
 
     const handleSubmit = async () => {
@@ -156,7 +146,6 @@ export default {
       toggleDarkMode,
       convertedContent,
       activeTab,
-      tabButtonClasses,
       handleSubmit
     };
   },
