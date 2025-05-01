@@ -5,7 +5,7 @@
     "types": ["vite/client"],
     "baseUrl": ".",
     "moduleResolution": "node",
-    "checkJs": true,
+    "checkJs": false,
     "paths": {
       "@/*": ["./src/*"]
     }

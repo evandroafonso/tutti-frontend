@@ -1,20 +1,7 @@
 <template>
   <div class="flex flex-col min-h-screen dark:bg-gray-900">
     <!-- Header Mobile -->
-    <header class="fixed top-0 left-0 right-0 z-20 p-4 bg-white shadow lg:hidden dark:bg-gray-800">
-      <div class="relative flex items-center justify-center gap-2">
-        <button @click="toggleMenu" class="absolute left-4 focus:outline-none" :aria-label="isMobileMenuOpen ? 'Fechar menu' : 'Abrir menu'">
-          <template v-if="isMobileMenuOpen">
-            <XMarkIcon class="w-6 h-6 text-gray-600 dark:text-gray-300" />
-          </template>
-          <template v-else>
-            <Bars3Icon class="w-6 h-6 text-gray-600 dark:text-gray-300" />
-          </template>
-        </button>
-        <MusicalNoteIcon class="w-8 h-8 text-green-600 dark:text-green-400" />
-        <h1 class="text-2xl font-semibold text-gray-700 dark:text-gray-300">Tutti Admin</h1>
-      </div>
-    </header>
+    <MobileHeader :is-menu-open="isMobileMenuOpen" @toggle-menu="toggleMenu" />
 
     <div class="flex flex-1 pt-16 lg:pt-0">
       <!-- Sidebar -->
@@ -173,6 +160,7 @@ import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outli
 import { useDarkMode } from '../composables/useDarkMode';
 import { marked } from 'marked';
 import toastService from '../services/toastService'
+import MobileHeader from '../components/MobileHeader.vue';
 
 
 export default {
@@ -183,6 +171,7 @@ export default {
     XMarkIcon,
     SunIcon,
     MoonIcon,
+    MobileHeader
   },
   setup() {
     // Configuração do marked para conversão de Markdown
