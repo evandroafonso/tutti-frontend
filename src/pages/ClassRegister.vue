@@ -60,22 +60,21 @@
       <main class="flex-1 h-screen p-8 overflow-y-auto bg-gray-200 dark:bg-gray-900">
         <!-- Botão de Cadastro no Topo -->
         <div class="flex items-end justify-end gap-2 mb-6">
-          <button @click="toggleRegistrationForm" :disabled="isEditing" :class="{
-            'bg-green-600 hover:bg-green-700': !isEditing,
-            'bg-gray-400 cursor-not-allowed': isEditing
-          }" class="px-4 py-2 font-bold text-white bg-green-600 rounded focus:outline-none">
+          <button @click="toggleRegistrationForm" :disabled="showRegistrationForm" :class="{
+            'bg-green-600 hover:bg-green-700': !showRegistrationForm, 'bg-gray-400 cursor-not-allowed': showRegistrationForm
+          }" class="px-4 py-2 font-bold text-white rounded focus:outline-none">
             Cadastrar
           </button>
-          <button @click="openEditWindow(selectedClassComputed.titulo)" :disabled="isEditing" :class="{
-            'bg-blue-600 hover:bg-blue-700': !isEditing,
-            'bg-gray-400 cursor-not-allowed': isEditing
-          }" class="px-4 py-2 font-bold text-white bg-blue-500 rounded focus:outline-none">
+
+          <button @click="openEditWindow(selectedClassComputed.titulo)" :disabled="showRegistrationForm" :class="{
+            'bg-blue-600 hover:bg-blue-700': !showRegistrationForm, 'bg-gray-400 cursor-not-allowed': showRegistrationForm
+          }" class="px-4 py-2 font-bold text-white rounded focus:outline-none">
             Editar
           </button>
-          <button @click="toggleRegistrationForm" :disabled="isEditing" :class="{
-            'bg-red-600 hover:bg-red-700': !isEditing,
-            'bg-gray-400 cursor-not-allowed': isEditing
-          }" class="px-4 py-2 font-bold text-white bg-red-500 rounded focus:outline-none">
+
+          <button @click="toggleRegistrationForm" :disabled="showRegistrationForm" :class="{
+            'bg-red-600 hover:bg-red-700': !showRegistrationForm, 'bg-gray-400 cursor-not-allowed': showRegistrationForm
+          }" class="px-4 py-2 font-bold text-white rounded focus:outline-none">
             Inativar
           </button>
         </div>

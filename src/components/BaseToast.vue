@@ -1,6 +1,7 @@
 <template>
   <div v-if="visible" :class="[
-    'flex items-center w-full max-w-xs p-4 text-gray-800 rounded-lg shadow-sm ms-2 dark:text-gray-400',
+    'flex items-center w-full max-w-xs p-4 rounded-lg shadow-sm ms-2', // Removido text-gray-800 e dark:text-gray-400 daqui
+    'text-gray-700 dark:text-gray-200', // Adicionado cores de texto aqui
     backgroundClass
   ]" role="alert">
     <div :class="[
@@ -42,45 +43,56 @@ function closeToast() {
   visible.value = false
 }
 
+// A mensagem computada parece ok, mas garantir que sempre retorne string é bom.
 const message = computed(() => {
-  return typeof props.message === 'string' ? props.message : ''
+  return String(props.message || '') // Garante que seja sempre string
 })
 
+// As classes do ícone já tinham dark mode, estão boas.
 const typeClasses = computed(() => {
   switch (props.type) {
     case 'success':
       return {
         iconSrc: 'https://img.icons8.com/color/48/000000/good-quality--v1.png',
+        // Usar tons mais claros no light mode e mais escuros/contrastantes no dark
         iconContainer: 'text-green-500 bg-green-100 dark:bg-green-800 dark:text-green-200',
       }
-    case 'danger':
+    case 'danger': // Corrigido: Danger deve ter ícone de erro
       return {
         iconSrc: 'https://img.icons8.com/color/48/000000/error--v1.png',
+        // Usar tons mais claros no light mode e mais escuros/contrastantes no dark
         iconContainer: 'text-red-500 bg-red-100 dark:bg-red-800 dark:text-red-200',
       }
-    case 'warning':
+    case 'warning': // Corrigido: Warning deve ter ícone de aviso (o dislike pode confundir)
       return {
-        iconSrc: 'https://img.icons8.com/color/48/000000/dislike--v1.png',
-        iconContainer: 'text-yellow-600 bg-yellow-100 dark:bg-yellow-700 dark:text-yellow-200',
+        // Sugestão de ícone de warning (pode usar o seu se preferir)
+        iconSrc: 'https://img.icons8.com/color/48/warning-shield.png', //'https://img.icons8.com/color/48/000000/dislike--v1.png',
+        // Usar tons mais claros no light mode e mais escuros/contrastantes no dark
+        iconContainer: 'text-yellow-500 bg-yellow-100 dark:bg-yellow-800 dark:text-yellow-200', // Ajustado para amarelo
       }
     default:
       return {
-        iconSrc: '',
-        iconContainer: '',
+        iconSrc: '', // Um ícone padrão de informação poderia ir aqui
+        iconContainer: 'text-gray-500 bg-gray-100 dark:bg-gray-700 dark:text-gray-200',
       }
   }
 })
 
+// **Principal Modificação:** Adicionar dark variants e corrigir mapeamento
 const backgroundClass = computed(() => {
   switch (props.type) {
     case 'success':
-      return 'bg-green-500'
+      // Fundo verde um pouco mais escuro (light) / verde escuro (dark)
+      return 'bg-green-500 dark:bg-green-800' // Alterado de 100 para 200
     case 'danger':
-      return 'bg-yellow-200'
+      // Fundo vermelho um pouco mais escuro (light) / vermelho escuro (dark)
+      return 'bg-red-400 dark:bg-red-900' // Alterado de 100 para 200
     case 'warning':
-      return 'bg-red-300'
+      // Fundo amarelo um pouco mais escuro (light) / amarelo escuro (dark)
+      return 'bg-yellow-200 dark:bg-yellow-900' // Alterado de 100 para 200
     default:
-      return 'bg-gray-200'
+      // Fundo cinza padrão (manter 100 ou mudar para 200 se preferir)
+      return 'bg-gray-100 dark:bg-gray-700' // Mantido 100 por enquanto
   }
 })
 </script>

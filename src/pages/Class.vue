@@ -1,4 +1,5 @@
 <template>
+  <!-- O template permanece inalterado -->
   <div class="min-h-screen dark:bg-gray-900">
     <!-- Header Mobile -->
     <header class="fixed top-0 left-0 right-0 z-20 p-4 bg-white shadow lg:hidden dark:bg-gray-800">
@@ -85,12 +86,12 @@
       <!-- Conteúdo Principal -->
       <main class="flex-1 h-screen p-8 ml-0 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900" v-if="aulaSelecionada">
         <div class="p-6 mt-10 mb-2 bg-white rounded-md dark:bg-gray-800">
+
           <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
             {{ aulaSelecionada?.titulo }}
           </h2>
-          <p class="mb-4 text-gray-700 dark:text-gray-300">
-            {{ aulaSelecionada?.texto }}
-          </p>
+          <div v-html="convertedContent" class="prose dark:prose-invert max-w-none">
+          </div>
           <div class="mb-10" v-if="aulaSelecionada?.videoUrl">
             <div class="max-w-4xl mx-auto overflow-hidden rounded-lg aspect-video">
               <iframe class="w-full h-full" :src="aulaSelecionada.videoUrl" title="Vídeo da Aula" frameborder="0" allowfullscreen></iframe>
@@ -141,10 +142,12 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { MusicalNoteIcon, UserCircleIcon } from '@heroicons/vue/24/solid';
 import { Bars3Icon, XMarkIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
 import { useDarkMode } from '../composables/useDarkMode';
+import classContentService from '../services/classContentService';
+import { marked } from 'marked';
 
 export default {
   components: {
@@ -156,40 +159,32 @@ export default {
     MoonIcon,
   },
   setup() {
-    const aulas = ref([
-      {
-        id: 1,
-        titulo: 'Introdução ao Vue 3',
-        texto: 'Esta aula apresenta os conceitos básicos do Vue 3.',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      },
-      {
-        id: 2,
-        titulo: 'Componentes no Vue 3',
-        texto: 'Aprenda a criar e usar componentes no Vue 3.',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      },
-      {
-        id: 3,
-        titulo: 'Diretivas e Eventos no Vue 3',
-        texto: 'Explore as diretivas e eventos no Vue 3.',
-        videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-      },
-    ]);
+    // Configuração do marked
+    marked.setOptions({
+      gfm: true,
+      breaks: true,
+    });
 
+    const aulas = ref([]);
     const comentarios = ref([
       { id: 1, nome: 'João', texto: 'Ótima aula!' },
       { id: 2, nome: 'Maria', texto: 'Gostei muito!' },
     ]);
-
     const novoComentario = ref({ nome: '', texto: '' });
-    const aulaSelecionada = ref(aulas.value[0]);
+    const aulaSelecionada = ref(null);
     const isMobileMenuOpen = ref(false);
     const { darkMode, toggleDarkMode } = useDarkMode();
 
+    // Conteúdo convertido de Markdown
+    const convertedContent = computed(() => {
+      if (aulaSelecionada.value?.texto) {
+        return marked.parse(aulaSelecionada.value.texto);
+      }
+      return '';
+    });
+
     const selecionarAula = (aula) => {
       aulaSelecionada.value = aula;
-      // Fecha o menu mobile ao selecionar a aula
       isMobileMenuOpen.value = false;
     };
 
@@ -206,11 +201,28 @@ export default {
       }
     };
 
-    onMounted(() => {
+    onMounted(async () => {
       const savedDarkMode = localStorage.getItem('darkMode');
       if (savedDarkMode === 'true') {
         darkMode.value = true;
         document.documentElement.classList.add('dark');
+      }
+
+      try {
+        const aulasData = await classContentService.fetchClasses();
+        aulas.value = aulasData.map(aula => ({
+          id: aula.id,
+          titulo: aula.title,
+          texto: aula.content,
+          videoUrl: aula.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+        }));
+
+        if (aulas.value.length > 0) {
+          aulaSelecionada.value = aulas.value[0];
+        }
+      } catch (error) {
+        alert('Erro ao carregar aulas: ' + error.message);
+        console.error('Erro detalhado:', error);
       }
     });
 
@@ -229,6 +241,7 @@ export default {
       toggleMenu,
       darkMode,
       toggleDarkMode,
+      convertedContent
     };
   },
 };
