@@ -241,12 +241,11 @@ export default {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
     };
 
-    // Refatora os estilos do botão da tab para evitar repetição
     const tabButtonClasses = (tabName) => {
       return [
         'inline-block px-4 py-2 font-semibold',
-        activeTab === tabName
-          ? 'border-b-2 border-green-500 text-green-600 dark:text-green-400 dark:border-green-400'
+        activeTab.value === tabName
+          ? 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
           : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300',
         'hover:bg-gray-100 dark:hover:bg-gray-700 rounded-t-lg',
       ];
