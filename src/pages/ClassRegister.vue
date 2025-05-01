@@ -33,11 +33,11 @@
 
         <!-- Listagem de todas as aulas -->
         <ul class="flex-1 py-2 overflow-y-auto">
-          <li v-for="classe in classes" :key="classe.id" @click="selectClass(classe)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
-            'bg-gray-100 dark:bg-gray-700': selectedClass?.id === classe.id,
+          <li v-for="classe in classes" :key="classe.titulo" @click="selectClass(classe)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
+            'bg-gray-100 dark:bg-gray-700': selectedClass?.titulo === classe.titulo,
             'hover:bg-gray-100 dark:hover:bg-gray-700': true
           }">
-            <span :class="selectedClass?.id === classe.id
+            <span :class="selectedClass?.titulo === classe.titulo
               ? 'text-green-500 dark:text-green-400'
               : 'text-gray-700 dark:text-gray-300'">
               {{ classe.titulo }}
@@ -322,11 +322,15 @@ export default {
       try {
         const data = await classContentService.fetchClasses();
         classes.value = data.map(({ id, title, content, classCategory }) => ({
-          id,
           titulo: title,
           texto: content,
           categoria: classCategory,
         }));
+        classes.value.sort((a, b) => {
+          const numA = parseInt(a.titulo.match(/\d+/)?.[0]) || 0;
+          const numB = parseInt(b.titulo.match(/\d+/)?.[0]) || 0;
+          return numA - numB;
+        });
       } catch (error) {
         alert(error.message);
       }

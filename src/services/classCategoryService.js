@@ -12,7 +12,6 @@ async function createCategory(categoryName) {
     });
     return response.data;
   } catch (error) {
-    console.error('Erro ao criar categoria:', error);
     throw new Error('Erro ao criar categoria');
   }
 }
@@ -29,7 +28,6 @@ async function fetchCategories() {
       description: category.description,
     }));
   } catch (error) {
-    console.error('Erro ao buscar categorias:', error);
     throw new Error('Erro ao buscar categorias');
   }
 }

@@ -13,15 +13,6 @@ const routes = [
       { path: '/classes', name: 'Classes', component: () => import('./pages/Class.vue') },
       { path: '/register-class', name: 'ClassRegister', component: () => import('./pages/ClassRegister.vue') },
     ],
-    beforeEnter: async (to, from, next) => {
-      try {
-        const userStore = useUserStore();
-        await userStore.fetchUser();
-        next();
-      } catch (error) {
-        next(false);
-      }
-    },
   },
   { path: '/', name: 'Home', component: Home },
 

@@ -27,11 +27,11 @@
         </div>
         <!-- Lista de Aulas (rolável) -->
         <ul class="flex-1 py-2 overflow-y-auto">
-          <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
-            'bg-gray-100 dark:bg-gray-700': aulaSelecionada?.id === aula.id,
+          <li v-for="aula in aulas" :key="aula.titulo" @click="selecionarAula(aula)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
+            'bg-gray-100 dark:bg-gray-700': aulaSelecionada?.titulo === aula.titulo,
             'hover:bg-gray-100 dark:hover:bg-gray-700': true
           }">
-            <span :class="aulaSelecionada?.id === aula.id
+            <span :class="aulaSelecionada?.titulo === aula.titulo
               ? 'text-green-500 dark:text-green-400'
               : 'text-gray-700 dark:text-gray-300'">
               {{ aula.titulo }}
@@ -61,11 +61,11 @@
         </div>
         <!-- Lista de Aulas Mobile -->
         <ul class="flex-1 py-2 overflow-y-auto">
-          <li v-for="aula in aulas" :key="aula.id" @click="selecionarAula(aula)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
-            'bg-gray-100 dark:bg-gray-700': aulaSelecionada?.id === aula.id,
+          <li v-for="aula in aulas" :key="aula.titulo" @click="selecionarAula(aula)" class="px-4 py-2 font-semibold transition duration-300 cursor-pointer" :class="{
+            'bg-gray-100 dark:bg-gray-700': aulaSelecionada?.titulo === aula.titulo,
             'hover:bg-gray-100 dark:hover:bg-gray-700': true
           }">
-            <span :class="aulaSelecionada?.id === aula.id
+            <span :class="aulaSelecionada?.titulo === aula.titulo
               ? 'text-green-500 dark:text-green-400'
               : 'text-gray-700 dark:text-gray-300'">
               {{ aula.titulo }}
@@ -211,18 +211,23 @@ export default {
       try {
         const aulasData = await classContentService.fetchClasses();
         aulas.value = aulasData.map(aula => ({
-          id: aula.id,
           titulo: aula.title,
           texto: aula.content,
           videoUrl: aula.videoUrl || 'https://www.youtube.com/embed/dQw4w9WgXcQ'
         }));
+
+        // Ordenar pelo número no título
+        aulas.value.sort((a, b) => {
+          const numA = parseInt(a.titulo.match(/\d+/)?.[0]) || 0;
+          const numB = parseInt(b.titulo.match(/\d+/)?.[0]) || 0;
+          return numA - numB;
+        });
 
         if (aulas.value.length > 0) {
           aulaSelecionada.value = aulas.value[0];
         }
       } catch (error) {
         alert('Erro ao carregar aulas: ' + error.message);
-        console.error('Erro detalhado:', error);
       }
     });
 

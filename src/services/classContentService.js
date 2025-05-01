@@ -10,7 +10,6 @@ async function registerClass(newClass) {
     const response = await axiosClient.post('/class-content', newClass);
     return response.data;
   } catch (error) {
-    console.error('Erro ao registrar aula:', error);
     throw new Error('Erro ao registrar aula');
   }
 }
@@ -25,7 +24,6 @@ async function updateClass(newClass) {
     const response = await axiosClient.put(`/class-content/${newClass.id}`, newClass);
     return response.data;
   } catch (error) {
-    console.error('Erro ao atualizar a aula:', error);
     throw new Error('Erro ao atualizar aula');
   }
 }
@@ -39,15 +37,12 @@ async function fetchClasses() {
     const response = await axiosClient.get('/class-content/classes');
     return response.data;
   } catch (error) {
-    console.error('Erro ao buscar aulas:', error);
     throw new Error('Erro ao buscar aulas');
   }
 }
 
 async function fetchClassesByTitle(title) {
-  console.log(title)
   const response = await axiosClient.get(`/class-content?title=${title}`);
-  console.log( JSON.stringify(response.data))
   return await JSON.stringify(response.data);
 }
 
