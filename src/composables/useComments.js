@@ -8,7 +8,10 @@ export function useComments() {
   const novoComentario = ref({ nome: '', texto: '' });
 
   const adicionarComentario = () => {
-    if (!novoComentario.value.nome?.trim() || !novoComentario.value.texto?.trim()) {
+    if (
+      !novoComentario.value.nome?.trim() ||
+      !novoComentario.value.texto?.trim()
+    ) {
       throw new Error('Nome e comentário são obrigatórios');
     }
 
@@ -28,6 +31,6 @@ export function useComments() {
   return {
     comentarios,
     novoComentario,
-    adicionarComentario
+    adicionarComentario,
   };
-} 
+}

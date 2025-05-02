@@ -12,6 +12,9 @@ async function createCategory(categoryName) {
     });
     return response.data;
   } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error('Erro ao criar categoria');
   }
 }
@@ -28,6 +31,9 @@ async function fetchCategories() {
       description: category.description,
     }));
   } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error('Erro ao buscar categorias');
   }
 }

@@ -5,46 +5,85 @@
 
     <div class="flex flex-1 pt-16 lg:pt-0">
       <!-- Sidebar -->
-      <SideMenu :aulas="classes" :aula-selecionada="selectedClass" :dark-mode="darkMode" :is-mobile="isMobileMenuOpen" @select="selectClass" @close="toggleMenu" @toggle-dark-mode="toggleDarkMode" />
+      <SideMenu
+        :aulas="classes"
+        :aula-selecionada="selectedClass"
+        :dark-mode="darkMode"
+        :is-mobile="isMobileMenuOpen"
+        @select="selectClass"
+        @close="toggleMenu"
+        @toggle-dark-mode="toggleDarkMode"
+      />
 
       <!-- Main Content -->
-      <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900">
+      <main
+        class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900"
+      >
         <!-- Botões de Ação -->
         <div class="flex items-end justify-end gap-2 mb-6">
-          <button @click="toggleRegistrationForm" :disabled="showRegistrationForm" :class="{
-            'bg-green-600 hover:bg-green-700': !showRegistrationForm,
-            'bg-gray-400 cursor-not-allowed': showRegistrationForm
-          }" class="px-4 py-2 font-bold text-white rounded focus:outline-none">
+          <button
+            @click="toggleRegistrationForm"
+            :disabled="showRegistrationForm"
+            :class="{
+              'bg-green-600 hover:bg-green-700': !showRegistrationForm,
+              'bg-gray-400 cursor-not-allowed': showRegistrationForm,
+            }"
+            class="px-4 py-2 font-bold text-white rounded focus:outline-none"
+          >
             Cadastrar
           </button>
 
-          <button @click="openEditWindow(selectedClassComputed.titulo)" :disabled="showRegistrationForm" :class="{
-            'bg-blue-600 hover:bg-blue-700': !showRegistrationForm,
-            'bg-gray-400 cursor-not-allowed': showRegistrationForm
-          }" class="px-4 py-2 font-bold text-white rounded focus:outline-none">
+          <button
+            @click="openEditWindow(selectedClassComputed.titulo)"
+            :disabled="showRegistrationForm"
+            :class="{
+              'bg-blue-600 hover:bg-blue-700': !showRegistrationForm,
+              'bg-gray-400 cursor-not-allowed': showRegistrationForm,
+            }"
+            class="px-4 py-2 font-bold text-white rounded focus:outline-none"
+          >
             Editar
           </button>
 
-          <button @click="toggleRegistrationForm" :disabled="showRegistrationForm" :class="{
-            'bg-red-600 hover:bg-red-700': !showRegistrationForm,
-            'bg-gray-400 cursor-not-allowed': showRegistrationForm
-          }" class="px-4 py-2 font-bold text-white rounded focus:outline-none">
+          <button
+            @click="toggleRegistrationForm"
+            :disabled="showRegistrationForm"
+            :class="{
+              'bg-red-600 hover:bg-red-700': !showRegistrationForm,
+              'bg-gray-400 cursor-not-allowed': showRegistrationForm,
+            }"
+            class="px-4 py-2 font-bold text-white rounded focus:outline-none"
+          >
             Inativar
           </button>
         </div>
 
         <!-- Conteúdo Principal -->
         <div v-if="showRegistrationForm">
-          <ClassForm :is-editing="isEditing" :categories="categories" :initial-data="selectedClass" @submit="handleFormSubmit" @open-category-modal="openCategoryModal" />
+          <ClassForm
+            :is-editing="isEditing"
+            :categories="categories"
+            :initial-data="isEditing ? selectedClass : null"
+            @submit="handleFormSubmit"
+            @open-category-modal="openCategoryModal"
+          />
         </div>
 
         <div v-else>
           <!-- Exibição da Aula Selecionada -->
-          <div v-if="selectedClassComputed" class="p-4 bg-white rounded-md dark:bg-gray-800">
-            <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
+          <div
+            v-if="selectedClassComputed"
+            class="p-4 bg-white rounded-md dark:bg-gray-800"
+          >
+            <h2
+              class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200"
+            >
               {{ selectedClassComputed.titulo }}
             </h2>
-            <div v-html="convertedContent" class="prose dark:prose-invert max-w-none"></div>
+            <div
+              v-html="convertedContent"
+              class="prose dark:prose-invert max-w-none"
+            ></div>
             <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
               Categoria: {{ selectedClassComputed.categoria }}
             </p>
@@ -54,7 +93,11 @@
     </div>
 
     <!-- Modal de Categoria -->
-    <CategoryModal :is-open="isCategoryModalOpen" @close="closeCategoryModal" @create="createCategory" />
+    <CategoryModal
+      :is-open="isCategoryModalOpen"
+      @close="closeCategoryModal"
+      @create="createCategory"
+    />
 
     <!-- Toast Container -->
     <ToastContainer />
@@ -72,6 +115,7 @@ import SideMenu from '../components/SideMenu.vue';
 import ClassForm from '../components/ClassForm.vue';
 import CategoryModal from '../components/CategoryModal.vue';
 import ToastContainer from '../components/ToastContainer.vue';
+import toastService from '../services/toastService';
 
 // Configuração do marked
 marked.setOptions({
@@ -94,7 +138,9 @@ const { darkMode, toggleDarkMode } = useDarkMode();
 
 // Computed
 const selectedClassComputed = computed(() => {
-  return selectedClass.value || (classes.value.length ? classes.value[0] : null);
+  return (
+    selectedClass.value || (classes.value.length ? classes.value[0] : null)
+  );
 });
 
 const convertedContent = computed(() => {
@@ -110,6 +156,9 @@ const toggleMenu = () => {
 };
 
 const toggleRegistrationForm = () => {
+  if (!isEditing.value) {
+    selectedClass.value = null;
+  }
   showRegistrationForm.value = true;
 };
 
@@ -121,8 +170,9 @@ const selectClass = (classe) => {
 
 const handleFormSubmit = async (formData) => {
   try {
+    console.log('Form Data:', formData);
     const classData = {
-      id: isEditing.value ? editingClassId.value : undefined,
+      id: formData.id,
       title: formData.title,
       content: formData.content,
       classCategory: formData.category,
@@ -130,22 +180,28 @@ const handleFormSubmit = async (formData) => {
 
     if (isEditing.value) {
       await classContentService.updateClass(classData);
+      toastService.show('Aula atualizada com sucesso!', 'success');
     } else {
       await classContentService.registerClass(classData);
+      toastService.show('Aula cadastrada com sucesso!', 'success');
     }
 
     await fetchClasses();
     showRegistrationForm.value = false;
     isEditing.value = false;
     editingClassId.value = null;
+    selectedClass.value = null;
   } catch (error) {
     console.error('Erro ao salvar aula:', error);
+    toastService.show(error.message, 'danger');
   }
 };
 
 const openEditWindow = async (title) => {
   try {
-    const data = await classContentService.fetchClassesByTitle(decodeURIComponent(title));
+    const data = await classContentService.fetchClassesByTitle(
+      decodeURIComponent(title)
+    );
     const dataJson = JSON.parse(data);
 
     selectedClass.value = {
@@ -159,6 +215,7 @@ const openEditWindow = async (title) => {
     showRegistrationForm.value = true;
   } catch (error) {
     console.error('Erro ao abrir edição:', error);
+    toastService.show(error.message, 'danger');
   }
 };
 
@@ -178,8 +235,10 @@ const createCategory = async (name) => {
       description: data.description,
     });
     closeCategoryModal();
+    toastService.show('Categoria criada com sucesso!', 'success');
   } catch (error) {
     console.error('Erro ao criar categoria:', error);
+    toastService.show(error.message, 'danger');
   }
 };
 
@@ -188,6 +247,7 @@ const fetchCategories = async () => {
     categories.value = await classCategoryService.fetchCategories();
   } catch (error) {
     console.error('Erro ao buscar categorias:', error);
+    toastService.show(error.message, 'danger');
   }
 };
 
@@ -206,6 +266,7 @@ const fetchClasses = async () => {
     });
   } catch (error) {
     console.error('Erro ao buscar aulas:', error);
+    toastService.show(error.message, 'danger');
   }
 };
 

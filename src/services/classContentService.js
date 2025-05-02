@@ -10,6 +10,9 @@ async function registerClass(newClass) {
     const response = await axiosClient.post('/class-content', newClass);
     return response.data;
   } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error('Erro ao registrar aula');
   }
 }
@@ -24,6 +27,9 @@ async function updateClass(newClass) {
     const response = await axiosClient.put(`/class-content/${newClass.id}`, newClass);
     return response.data;
   } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error('Erro ao atualizar aula');
   }
 }
@@ -37,13 +43,23 @@ async function fetchClasses() {
     const response = await axiosClient.get('/class-content/classes');
     return response.data;
   } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error('Erro ao buscar aulas');
   }
 }
 
 async function fetchClassesByTitle(title) {
-  const response = await axiosClient.get(`/class-content?title=${title}`);
-  return await JSON.stringify(response.data);
+  try {
+    const response = await axiosClient.get(`/class-content?title=${title}`);
+    return await JSON.stringify(response.data);
+  } catch (error) {
+    if (error.response?.data?.message) {
+      throw new Error(error.response.data.message);
+    }
+    throw new Error('Erro ao buscar aula por título');
+  }
 }
 
 export default {

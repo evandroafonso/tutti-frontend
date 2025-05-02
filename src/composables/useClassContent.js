@@ -11,14 +11,31 @@ export function useClassContent() {
   // Configuração do marked
   marked.setOptions({
     gfm: true,
-    breaks: true
+    breaks: true,
   });
 
   const convertedContent = computed(() => {
     if (aulaSelecionada.value?.texto) {
       const html = marked(aulaSelecionada.value.texto);
       return DOMPurify.sanitize(html, {
-        ALLOWED_TAGS: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'strong', 'em', 'a', 'ul', 'ol', 'li', 'blockquote', 'code', 'pre'],
+        ALLOWED_TAGS: [
+          'p',
+          'h1',
+          'h2',
+          'h3',
+          'h4',
+          'h5',
+          'h6',
+          'strong',
+          'em',
+          'a',
+          'ul',
+          'ol',
+          'li',
+          'blockquote',
+          'code',
+          'pre',
+        ],
         ALLOWED_ATTR: ['href', 'target', 'rel'],
       });
     }
@@ -33,10 +50,10 @@ export function useClassContent() {
   const carregarAulas = async () => {
     try {
       const aulasData = await classContentService.fetchClasses();
-      aulas.value = aulasData.map(aula => ({
+      aulas.value = aulasData.map((aula) => ({
         titulo: aula.title,
         texto: aula.content,
-        videoUrl: aula.videoUrl || null
+        videoUrl: aula.videoUrl || null,
       }));
 
       // Ordenar pelo número no título
@@ -61,6 +78,6 @@ export function useClassContent() {
     activeTab,
     convertedContent,
     selecionarAula,
-    carregarAulas
+    carregarAulas,
   };
-} 
+}

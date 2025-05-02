@@ -1,12 +1,41 @@
 <template>
   <div class="min-h-screen dark:bg-gray-900">
     <MobileHeader :is-menu-open="isMobileMenuOpen" @toggle-menu="toggleMenu" />
-    <SideMenu v-if="isMobileMenuOpen" :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" :is-mobile="true" @select="selecionarAula" @close="toggleMenu" @toggle-dark-mode="toggleDarkMode" />
+    <SideMenu
+      v-if="isMobileMenuOpen"
+      :aulas="aulas"
+      :aula-selecionada="aulaSelecionada"
+      :dark-mode="darkMode"
+      :is-mobile="true"
+      @select="selecionarAula"
+      @close="toggleMenu"
+      @toggle-dark-mode="toggleDarkMode"
+    />
     <div class="flex">
-      <SideMenu :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" @select="selecionarAula" @toggle-dark-mode="toggleDarkMode" />
-      <SideMenu v-if="isMobileMenuOpen" :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" :is-mobile="true" @select="selecionarAula" @close="toggleMenu" @toggle-dark-mode="toggleDarkMode" />
-      <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900" v-if="aulaSelecionada">
-        <div class="p-6 mt-12 mb-2 bg-white rounded-md sm:mt-0 dark:bg-gray-800">
+      <SideMenu
+        :aulas="aulas"
+        :aula-selecionada="aulaSelecionada"
+        :dark-mode="darkMode"
+        @select="selecionarAula"
+        @toggle-dark-mode="toggleDarkMode"
+      />
+      <SideMenu
+        v-if="isMobileMenuOpen"
+        :aulas="aulas"
+        :aula-selecionada="aulaSelecionada"
+        :dark-mode="darkMode"
+        :is-mobile="true"
+        @select="selecionarAula"
+        @close="toggleMenu"
+        @toggle-dark-mode="toggleDarkMode"
+      />
+      <main
+        class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900"
+        v-if="aulaSelecionada"
+      >
+        <div
+          class="p-6 mt-12 mb-2 bg-white rounded-md sm:mt-0 dark:bg-gray-800"
+        >
           <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
             {{ aulaSelecionada?.titulo }}
           </h2>
@@ -14,34 +43,58 @@
           <div class="mb-8">
             <ul class="flex border-b border-gray-200 dark:border-gray-700">
               <li class="mr-2">
-                <TabButton :is-active="activeTab === 'content'" @click="activeTab = 'content'">
+                <TabButton
+                  :is-active="activeTab === 'content'"
+                  @click="activeTab = 'content'"
+                >
                   Conteúdo
                 </TabButton>
               </li>
               <li class="mr-2">
-                <TabButton :is-active="activeTab === 'comments'" @click="activeTab = 'comments'">
+                <TabButton
+                  :is-active="activeTab === 'comments'"
+                  @click="activeTab = 'comments'"
+                >
                   Comentários
                 </TabButton>
               </li>
             </ul>
             <div class="mt-4">
-              <div v-if="activeTab === 'content'" class="prose dark:prose-invert max-w-none">
+              <div
+                v-if="activeTab === 'content'"
+                class="prose dark:prose-invert max-w-none"
+              >
                 <div v-html="convertedContent"></div>
                 <div v-if="aulaSelecionada?.videoUrl" class="mt-6">
-                  <div class="max-w-4xl mx-auto overflow-hidden rounded-lg aspect-video">
-                    <iframe class="w-full h-full" :src="aulaSelecionada.videoUrl" title="Vídeo da Aula" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  <div
+                    class="max-w-4xl mx-auto overflow-hidden rounded-lg aspect-video"
+                  >
+                    <iframe
+                      class="w-full h-full"
+                      :src="aulaSelecionada.videoUrl"
+                      title="Vídeo da Aula"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
                   </div>
                 </div>
               </div>
               <div v-if="activeTab === 'comments'">
-                <CommentsSection :comentarios="comentarios" @add-comment="adicionarComentario" />
+                <CommentsSection
+                  :comentarios="comentarios"
+                  @add-comment="adicionarComentario"
+                />
               </div>
             </div>
           </div>
         </div>
       </main>
 
-      <main class="flex items-center justify-center flex-1 h-screen p-8 ml-0 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900" v-else>
+      <main
+        class="flex items-center justify-center flex-1 h-screen p-8 ml-0 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900"
+        v-else
+      >
         <p class="text-lg text-gray-500 dark:text-gray-400">
           Selecione uma aula para ver o conteúdo.
         </p>
@@ -66,7 +119,7 @@ export default {
     MobileHeader,
     SideMenu,
     TabButton,
-    CommentsSection
+    CommentsSection,
   },
   setup() {
     const isMobileMenuOpen = ref(false);
@@ -77,13 +130,9 @@ export default {
       activeTab,
       convertedContent,
       selecionarAula,
-      carregarAulas
+      carregarAulas,
     } = useClassContent();
-    const {
-      comentarios,
-      novoComentario,
-      adicionarComentario
-    } = useComments();
+    const { comentarios, novoComentario, adicionarComentario } = useComments();
 
     const toggleMenu = () => {
       isMobileMenuOpen.value = !isMobileMenuOpen.value;
@@ -123,7 +172,7 @@ export default {
       toggleDarkMode,
       convertedContent,
       activeTab,
-      handleSubmit
+      handleSubmit,
     };
   },
 };
