@@ -3,26 +3,18 @@ import { ref, onMounted } from 'vue';
 export function useDarkMode() {
   const darkMode = ref(false);
 
+  const applyClass = (isDark) => document.documentElement.classList.toggle('dark', isDark);
+
   const toggleDarkMode = () => {
     darkMode.value = !darkMode.value;
-    localStorage.setItem('darkMode', JSON.stringify(darkMode.value));
-    if (darkMode.value) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    localStorage.setItem('darkMode', darkMode.value);
+    applyClass(darkMode.value);
   };
 
   onMounted(() => {
-    const savedDarkMode = localStorage.getItem('darkMode');
-    if (savedDarkMode !== null) {
-      darkMode.value = JSON.parse(savedDarkMode);
-      if (darkMode.value) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
+    const saved = localStorage.getItem('darkMode');
+    darkMode.value = saved === 'true';
+    applyClass(darkMode.value);
   });
 
   return { darkMode, toggleDarkMode };

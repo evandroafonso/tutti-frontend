@@ -5,20 +5,10 @@
 
     <div class="flex flex-1 pt-16 lg:pt-0">
       <!-- Sidebar -->
-      <SideMenu
-        :aulas="classes"
-        :aula-selecionada="selectedClass"
-        :dark-mode="darkMode"
-        :is-mobile="isMobileMenuOpen"
-        @select="selectClass"
-        @close="toggleMenu"
-        @toggle-dark-mode="toggleDarkMode"
-      />
+      <SideMenu :aulas="classes" :aula-selecionada="selectedClass" :dark-mode="darkMode" :is-mobile="isMobileMenuOpen" @select="selectClass" @close="toggleMenu" @toggle-dark-mode="toggleDarkMode" />
 
       <!-- Main Content -->
-      <main
-        class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900"
-      >
+      <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900">
         <!-- Botões de Ação -->
         <div class="flex items-end justify-end gap-2 mb-6">
           <button
@@ -60,44 +50,24 @@
 
         <!-- Conteúdo Principal -->
         <div v-if="showRegistrationForm">
-          <ClassForm
-            :is-editing="isEditing"
-            :categories="categories"
-            :initial-data="isEditing ? selectedClass : null"
-            @submit="handleFormSubmit"
-            @open-category-modal="openCategoryModal"
-          />
+          <ClassForm :is-editing="isEditing" :categories="categories" :initial-data="isEditing ? selectedClass : null" @submit="handleFormSubmit" @open-category-modal="openCategoryModal" />
         </div>
 
         <div v-else>
           <!-- Exibição da Aula Selecionada -->
-          <div
-            v-if="selectedClassComputed"
-            class="p-4 bg-white rounded-md dark:bg-gray-800"
-          >
-            <h2
-              class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200"
-            >
+          <div v-if="selectedClassComputed" class="p-4 bg-white rounded-md dark:bg-gray-800">
+            <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
               {{ selectedClassComputed.titulo }}
             </h2>
-            <div
-              v-html="convertedContent"
-              class="prose dark:prose-invert max-w-none"
-            ></div>
-            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-              Categoria: {{ selectedClassComputed.categoria }}
-            </p>
+            <div v-html="convertedContent" class="prose dark:prose-invert max-w-none"></div>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ selectedClassComputed.categoria }}</p>
           </div>
         </div>
       </main>
     </div>
 
     <!-- Modal de Categoria -->
-    <CategoryModal
-      :is-open="isCategoryModalOpen"
-      @close="closeCategoryModal"
-      @create="createCategory"
-    />
+    <CategoryModal :is-open="isCategoryModalOpen" @close="closeCategoryModal" @create="createCategory" />
 
     <!-- Toast Container -->
     <ToastContainer />
@@ -117,13 +87,11 @@ import CategoryModal from '../components/CategoryModal.vue';
 import ToastContainer from '../components/ToastContainer.vue';
 import toastService from '../services/toastService';
 
-// Configuração do marked
 marked.setOptions({
   gfm: true,
   breaks: true,
 });
 
-// Estados
 const isMobileMenuOpen = ref(false);
 const classes = ref([]);
 const selectedClass = ref(null);
@@ -131,34 +99,18 @@ const categories = ref([]);
 const showRegistrationForm = ref(false);
 const isCategoryModalOpen = ref(false);
 const isEditing = ref(false);
-const editingClassId = ref(null);
-
-// Modo escuro
 const { darkMode, toggleDarkMode } = useDarkMode();
 
 // Computed
-const selectedClassComputed = computed(() => {
-  return (
-    selectedClass.value || (classes.value.length ? classes.value[0] : null)
-  );
-});
+const selectedClassComputed = computed(() => selectedClass.value || (classes.value.length ? classes.value[0] : null));
 
-const convertedContent = computed(() => {
-  if (selectedClassComputed.value && selectedClassComputed.value.texto) {
-    return marked.parse(selectedClassComputed.value.texto);
-  }
-  return '';
-});
+const convertedContent = computed(() => (selectedClassComputed.value?.texto ? marked.parse(selectedClassComputed.value.texto) : ''));
 
 // Funções
-const toggleMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value;
-};
+const toggleMenu = () => (isMobileMenuOpen.value = !isMobileMenuOpen.value);
 
 const toggleRegistrationForm = () => {
-  if (!isEditing.value) {
-    selectedClass.value = null;
-  }
+  if (!isEditing.value) selectedClass.value = null;
   showRegistrationForm.value = true;
 };
 
@@ -170,7 +122,6 @@ const selectClass = (classe) => {
 
 const handleFormSubmit = async (formData) => {
   try {
-    console.log('Form Data:', formData);
     const classData = {
       id: formData.id,
       title: formData.title,
@@ -189,19 +140,15 @@ const handleFormSubmit = async (formData) => {
     await fetchClasses();
     showRegistrationForm.value = false;
     isEditing.value = false;
-    editingClassId.value = null;
     selectedClass.value = null;
   } catch (error) {
-    console.error('Erro ao salvar aula:', error);
     toastService.show(error.message, 'danger');
   }
 };
 
 const openEditWindow = async (title) => {
   try {
-    const data = await classContentService.fetchClassesByTitle(
-      decodeURIComponent(title)
-    );
+    const data = await classContentService.fetchClassesByTitle(decodeURIComponent(title));
     const dataJson = JSON.parse(data);
 
     selectedClass.value = {
@@ -214,18 +161,12 @@ const openEditWindow = async (title) => {
     isEditing.value = true;
     showRegistrationForm.value = true;
   } catch (error) {
-    console.error('Erro ao abrir edição:', error);
     toastService.show(error.message, 'danger');
   }
 };
 
-const openCategoryModal = () => {
-  isCategoryModalOpen.value = true;
-};
-
-const closeCategoryModal = () => {
-  isCategoryModalOpen.value = false;
-};
+const openCategoryModal = () => (isCategoryModalOpen.value = true);
+const closeCategoryModal = () => (isCategoryModalOpen.value = false);
 
 const createCategory = async (name) => {
   try {
@@ -237,7 +178,6 @@ const createCategory = async (name) => {
     closeCategoryModal();
     toastService.show('Categoria criada com sucesso!', 'success');
   } catch (error) {
-    console.error('Erro ao criar categoria:', error);
     toastService.show(error.message, 'danger');
   }
 };
@@ -246,7 +186,6 @@ const fetchCategories = async () => {
   try {
     categories.value = await classCategoryService.fetchCategories();
   } catch (error) {
-    console.error('Erro ao buscar categorias:', error);
     toastService.show(error.message, 'danger');
   }
 };
@@ -254,18 +193,14 @@ const fetchCategories = async () => {
 const fetchClasses = async () => {
   try {
     const data = await classContentService.fetchClasses();
-    classes.value = data.map(({ id, title, content, classCategory }) => ({
-      titulo: title,
-      texto: content,
-      categoria: classCategory,
-    }));
-    classes.value.sort((a, b) => {
-      const numA = parseInt(a.titulo.match(/\d+/)?.[0]) || 0;
-      const numB = parseInt(b.titulo.match(/\d+/)?.[0]) || 0;
-      return numA - numB;
-    });
+    classes.value = data
+      .map(({ id, title, content, classCategory }) => ({
+        titulo: title,
+        texto: content,
+        categoria: classCategory,
+      }))
+      .sort((a, b) => (parseInt(a.titulo.match(/\d+/)?.[0]) || 0) - (parseInt(b.titulo.match(/\d+/)?.[0]) || 0));
   } catch (error) {
-    console.error('Erro ao buscar aulas:', error);
     toastService.show(error.message, 'danger');
   }
 };

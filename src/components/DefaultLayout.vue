@@ -16,10 +16,7 @@
             :key="item.name"
             as="a"
             :href="item.href"
-            :class="[
-              'text-neutral-700 active:bg-green-600 hover:text-white',
-              'block rounded-md px-3 py-2 text-base font-medium',
-            ]"
+            :class="['text-neutral-700 active:bg-green-600 hover:text-white', 'block rounded-md px-3 py-2 text-base font-medium']"
             :aria-current="item.current ? 'page' : undefined"
             >{{ item.name }}</DisclosureButton
           >
@@ -67,15 +64,7 @@
 </template>
 
 <script setup>
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-} from '@headlessui/vue';
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { Bars3Icon, XMarkIcon, MusicalNoteIcon } from '@heroicons/vue/24/solid';
 import { RouterLink, RouterView } from 'vue-router';
 import useUserStore from '../store/user';
