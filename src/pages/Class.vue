@@ -56,6 +56,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useDarkMode } from '../composables/useDarkMode';
 import { useClassContent } from '../composables/useClassContent';
 import { useComments } from '../composables/useComments';
+import { useLastSelectedClass } from '../composables/useLastSelectedClass';
 import MobileHeader from '../components/MobileHeader.vue';
 import SideMenu from '../components/SideMenu.vue';
 import TabButton from '../components/TabButton.vue';
@@ -68,26 +69,18 @@ export default {
     const toggleMenu = () => (isMobileMenuOpen.value = !isMobileMenuOpen.value);
     const { darkMode, toggleDarkMode } = useDarkMode();
     const { aulas, aulaSelecionada, activeTab, convertedContent, selecionarAula, carregarAulas } = useClassContent();
-
     const { comentarios, adicionarComentario } = useComments();
+    const { salvarAulaSelecionada, carregarUltimaAulaSelecionada } = useLastSelectedClass(aulas, selecionarAula);
 
     const selecionarAulaComMenuFechado = (aula) => {
       selecionarAula(aula);
-      console.log('Aula selecionada:', aula);
-      localStorage.setItem('aulaSelecionadaId', aula.titulo);
+      salvarAulaSelecionada(aula);
       toggleMenu();
     };
 
     onMounted(async () => {
       await carregarAulas();
-
-      const tituloAula = localStorage.getItem('aulaSelecionadaId');
-      if (!tituloAula) return;
-
-      const aula = aulas.value.find((aula) => aula.titulo.trim() === tituloAula.trim());
-      if (aula) {
-        selecionarAula(aula);
-      }
+      carregarUltimaAulaSelecionada();
     });
 
     return {
