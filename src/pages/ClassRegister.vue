@@ -1,213 +1,103 @@
 <template>
   <div class="flex flex-col min-h-screen dark:bg-gray-900">
-    <!-- Header Mobile -->
     <MobileHeader :is-menu-open="isMobileMenuOpen" @toggle-menu="toggleMenu" />
-
+    <SideMenu
+      :aulas="aulas"
+      :aula-selecionada="aulaSelecionada"
+      :dark-mode="darkMode"
+      :is-mobile="true"
+      v-if="isMobileMenuOpen"
+      @select="selecionarAulaComMenuFechado"
+      @close="toggleMenu"
+      @toggle-dark-mode="toggleDarkMode"
+    />
     <div class="flex flex-1 pt-16 lg:pt-0">
-      <!-- Sidebar -->
-      <SideMenu :aulas="classes" :aula-selecionada="selectedClass" :dark-mode="darkMode" :is-mobile="isMobileMenuOpen" @select="selectClass" @close="toggleMenu" @toggle-dark-mode="toggleDarkMode" />
-
-      <!-- Main Content -->
+      <SideMenu :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" @select="selecionarAulaComMenuFechado" @toggle-dark-mode="toggleDarkMode" />
       <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900">
-        <!-- Botões de Ação -->
         <div class="flex items-end justify-end gap-2 mb-6">
-          <button
-            @click="toggleRegistrationForm"
-            :disabled="showRegistrationForm"
-            :class="{
-              'bg-green-600 hover:bg-green-700': !showRegistrationForm,
-              'bg-gray-400 cursor-not-allowed': showRegistrationForm,
-            }"
-            class="px-4 py-2 font-bold text-white rounded focus:outline-none"
-          >
-            Cadastrar
-          </button>
-
-          <button
-            @click="openEditWindow(selectedClassComputed.titulo)"
-            :disabled="showRegistrationForm"
-            :class="{
-              'bg-blue-600 hover:bg-blue-700': !showRegistrationForm,
-              'bg-gray-400 cursor-not-allowed': showRegistrationForm,
-            }"
-            class="px-4 py-2 font-bold text-white rounded focus:outline-none"
-          >
-            Editar
-          </button>
-
-          <button
-            @click="toggleRegistrationForm"
-            :disabled="showRegistrationForm"
-            :class="{
-              'bg-red-600 hover:bg-red-700': !showRegistrationForm,
-              'bg-gray-400 cursor-not-allowed': showRegistrationForm,
-            }"
-            class="px-4 py-2 font-bold text-white rounded focus:outline-none"
-          >
-            Inativar
-          </button>
+          <ActionButton text="Cadastrar" color="green" :disabled="showRegistrationForm" @click="toggleRegistrationForm" />
+          <ActionButton text="Editar" color="blue" :disabled="showRegistrationForm" @click="() => abrirJanelaEdicao(aulaSelecionadaComputed.titulo)" />
+          <ActionButton text="Inativar" color="red" :disabled="showRegistrationForm" @click="toggleRegistrationForm" />
         </div>
 
-        <!-- Conteúdo Principal -->
         <div v-if="showRegistrationForm">
-          <ClassForm :is-editing="isEditing" :categories="categories" :initial-data="isEditing ? selectedClass : null" @submit="handleFormSubmit" @open-category-modal="openCategoryModal" />
+          <ClassForm :is-editing="isEditing" :categories="categories" :initial-data="isEditing ? aulaSelecionada : null" @submit="handleFormSubmit" @open-category-modal="openCategoryModal" />
         </div>
-
-        <div v-else>
-          <!-- Exibição da Aula Selecionada -->
-          <div v-if="selectedClassComputed" class="p-4 bg-white rounded-md dark:bg-gray-800">
-            <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
-              {{ selectedClassComputed.titulo }}
-            </h2>
-            <div v-html="convertedContent" class="prose dark:prose-invert max-w-none"></div>
-            <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ selectedClassComputed.categoria }}</p>
-          </div>
+        <div v-else-if="aulaSelecionadaComputed" class="p-4 bg-white rounded-md dark:bg-gray-800">
+          <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">{{ aulaSelecionadaComputed.titulo }}</h2>
+          <div v-html="convertedContent" class="prose dark:prose-invert max-w-none"></div>
+          <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">Categoria: {{ aulaSelecionadaComputed.categoria }}</p>
         </div>
       </main>
     </div>
-
-    <!-- Modal de Categoria -->
     <CategoryModal :is-open="isCategoryModalOpen" @close="closeCategoryModal" @create="createCategory" />
-
-    <!-- Toast Container -->
     <ToastContainer />
   </div>
 </template>
 
-<script setup>
+<script>
 import { ref, computed, onMounted } from 'vue';
-import { marked } from 'marked';
-import classContentService from '../services/classContentService';
-import classCategoryService from '../services/classCategoryService';
 import { useDarkMode } from '../composables/useDarkMode';
+import { useClassContent } from '../composables/useClassContent';
+import { useCategories } from '../composables/useCategories';
+import { useLastSelectedClass } from '../composables/useLastSelectedClass';
 import MobileHeader from '../components/MobileHeader.vue';
 import SideMenu from '../components/SideMenu.vue';
 import ClassForm from '../components/ClassForm.vue';
 import CategoryModal from '../components/CategoryModal.vue';
 import ToastContainer from '../components/ToastContainer.vue';
-import toastService from '../services/toastService';
+import ActionButton from '../components/ActionButton.vue';
 
-marked.setOptions({
-  gfm: true,
-  breaks: true,
-});
+export default {
+  components: { MobileHeader, SideMenu, ClassForm, CategoryModal, ToastContainer, ActionButton },
+  setup() {
+    const isMobileMenuOpen = ref(false);
+    const { darkMode, toggleDarkMode } = useDarkMode();
 
-const isMobileMenuOpen = ref(false);
-const classes = ref([]);
-const selectedClass = ref(null);
-const categories = ref([]);
-const showRegistrationForm = ref(false);
-const isCategoryModalOpen = ref(false);
-const isEditing = ref(false);
-const { darkMode, toggleDarkMode } = useDarkMode();
+    const { aulas, aulaSelecionada, convertedContent, selecionarAula, carregarAulas, isEditing, showRegistrationForm, abrirJanelaEdicao, handleFormSubmit, toggleRegistrationForm } = useClassContent();
 
-// Computed
-const selectedClassComputed = computed(() => selectedClass.value || (classes.value.length ? classes.value[0] : null));
+    const { categories, isCategoryModalOpen, fetchCategories, createCategory, openCategoryModal, closeCategoryModal } = useCategories();
 
-const convertedContent = computed(() => (selectedClassComputed.value?.texto ? marked.parse(selectedClassComputed.value.texto) : ''));
+    const { salvarAulaSelecionada, carregarUltimaAulaSelecionada } = useLastSelectedClass(aulas, selecionarAula);
 
-// Funções
-const toggleMenu = () => (isMobileMenuOpen.value = !isMobileMenuOpen.value);
+    const aulaSelecionadaComputed = computed(() => aulaSelecionada.value || aulas.value[0] || null);
 
-const toggleRegistrationForm = () => {
-  if (!isEditing.value) selectedClass.value = null;
-  showRegistrationForm.value = true;
-};
+    const toggleMenu = () => (isMobileMenuOpen.value = !isMobileMenuOpen.value);
 
-const selectClass = (classe) => {
-  selectedClass.value = classe;
-  showRegistrationForm.value = false;
-  isMobileMenuOpen.value = false;
-};
-
-const handleFormSubmit = async (formData) => {
-  try {
-    const classData = {
-      id: formData.id,
-      title: formData.title,
-      content: formData.content,
-      classCategory: formData.category,
+    const selecionarAulaComMenuFechado = (aula) => {
+      selecionarAula(aula);
+      salvarAulaSelecionada(aula);
+      showRegistrationForm.value = false;
+      toggleMenu();
     };
 
-    if (isEditing.value) {
-      await classContentService.updateClass(classData);
-      toastService.show('Aula atualizada com sucesso!', 'success');
-    } else {
-      await classContentService.registerClass(classData);
-      toastService.show('Aula cadastrada com sucesso!', 'success');
-    }
-
-    await fetchClasses();
-    showRegistrationForm.value = false;
-    isEditing.value = false;
-    selectedClass.value = null;
-  } catch (error) {
-    toastService.show(error.message, 'danger');
-  }
-};
-
-const openEditWindow = async (title) => {
-  try {
-    const data = await classContentService.fetchClassesByTitle(decodeURIComponent(title));
-    const dataJson = JSON.parse(data);
-
-    selectedClass.value = {
-      id: dataJson.id,
-      titulo: dataJson.title,
-      texto: dataJson.content,
-      categoria: dataJson.classCategory,
-    };
-
-    isEditing.value = true;
-    showRegistrationForm.value = true;
-  } catch (error) {
-    toastService.show(error.message, 'danger');
-  }
-};
-
-const openCategoryModal = () => (isCategoryModalOpen.value = true);
-const closeCategoryModal = () => (isCategoryModalOpen.value = false);
-
-const createCategory = async (name) => {
-  try {
-    const data = await classCategoryService.createCategory(name);
-    categories.value.push({
-      id: data.id,
-      description: data.description,
+    onMounted(async () => {
+      await fetchCategories();
+      await carregarAulas();
+      carregarUltimaAulaSelecionada();
     });
-    closeCategoryModal();
-    toastService.show('Categoria criada com sucesso!', 'success');
-  } catch (error) {
-    toastService.show(error.message, 'danger');
-  }
-};
 
-const fetchCategories = async () => {
-  try {
-    categories.value = await classCategoryService.fetchCategories();
-  } catch (error) {
-    toastService.show(error.message, 'danger');
-  }
+    return {
+      aulas,
+      aulaSelecionada,
+      aulaSelecionadaComputed,
+      convertedContent,
+      isEditing,
+      showRegistrationForm,
+      categories,
+      isCategoryModalOpen,
+      isMobileMenuOpen,
+      darkMode,
+      toggleMenu,
+      toggleDarkMode,
+      selecionarAulaComMenuFechado,
+      abrirJanelaEdicao,
+      handleFormSubmit,
+      toggleRegistrationForm,
+      createCategory,
+      openCategoryModal,
+      closeCategoryModal,
+    };
+  },
 };
-
-const fetchClasses = async () => {
-  try {
-    const data = await classContentService.fetchClasses();
-    classes.value = data
-      .map(({ id, title, content, classCategory }) => ({
-        titulo: title,
-        texto: content,
-        categoria: classCategory,
-      }))
-      .sort((a, b) => (parseInt(a.titulo.match(/\d+/)?.[0]) || 0) - (parseInt(b.titulo.match(/\d+/)?.[0]) || 0));
-  } catch (error) {
-    toastService.show(error.message, 'danger');
-  }
-};
-
-// Lifecycle
-onMounted(() => {
-  fetchCategories();
-  fetchClasses();
-});
 </script>
