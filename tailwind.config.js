@@ -1,9 +1,17 @@
 /** @type {import('tailwindcss').Config} */
+import { colors, darkColors, textColors, backgroundColors, borderColors } from './src/theme/colors';
+
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        gray: colors.gray,
+        text: textColors,
+        background: backgroundColors,
+        border: borderColors,
+      },
       typography: (theme) => ({
         DEFAULT: {
           css: {

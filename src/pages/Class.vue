@@ -15,7 +15,7 @@
       <SideMenu :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" @select="selecionarAula" @toggle-dark-mode="toggleDarkMode" />
       <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900" v-if="aulaSelecionada">
         <div class="p-6 mt-12 mb-2 bg-white rounded-md sm:mt-0 dark:bg-gray-800">
-          <h2 class="mb-4 text-3xl font-bold text-gray-800 dark:text-gray-200">
+          <h2 class="mb-4 text-3xl font-bold text-gray-700 dark:text-gray-200">
             {{ aulaSelecionada.titulo }}
           </h2>
           <ul class="flex mb-4 border-b border-gray-200 dark:border-gray-700">
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useDarkMode } from '../composables/useDarkMode';
 import { useClassContent } from '../composables/useClassContent';
 import { useComments } from '../composables/useComments';
