@@ -7,10 +7,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        gray: colors.gray,
-        text: textColors,
-        background: backgroundColors,
-        border: borderColors,
+        dark: {
+          background: '#22262B',
+          backgroundTab: '#37383B',
+          title: '#e5e7eb',
+          subTitle: '#D5DB',
+        },
+        accent: '#F59E0B',
       },
       typography: (theme) => ({
         DEFAULT: {

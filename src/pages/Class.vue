@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen dark:bg-gray-900">
+  <div class="min-h-screen">
     <MobileHeader :is-menu-open="isMobileMenuOpen" @toggle-menu="toggleMenu" />
     <SideMenu
       :aulas="aulas"
@@ -13,9 +13,9 @@
     />
     <div class="flex">
       <SideMenu :aulas="aulas" :aula-selecionada="aulaSelecionada" :dark-mode="darkMode" @select="selecionarAula" @toggle-dark-mode="toggleDarkMode" />
-      <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900" v-if="aulaSelecionada">
-        <div class="p-6 mt-12 mb-2 bg-white rounded-md sm:mt-0 dark:bg-gray-800">
-          <h2 class="mb-4 text-3xl font-bold text-gray-700 dark:text-gray-200">
+      <main class="flex-1 min-h-screen p-8 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-dark-background" v-if="aulaSelecionada">
+        <div class="p-6 mt-12 mb-2 bg-white rounded-md sm:mt-0 dark:bg-dark-backgroundTab">
+          <h2 class="mb-4 text-3xl font-bold text-gray-700 dark:text-dark-title">
             {{ aulaSelecionada.titulo }}
           </h2>
           <ul class="flex mb-4 border-b border-gray-200 dark:border-gray-700">
