@@ -18,7 +18,7 @@
           <h2 class="mb-4 text-3xl font-bold text-gray-700 dark:text-dark-title">
             {{ aulaSelecionada.titulo }}
           </h2>
-          <ul class="flex mb-4 border-b border-gray-200 dark:border-gray-700">
+          <ul class="flex mb-4 border-b border-gray-200 dark:border-dark-border">
             <li class="mr-2">
               <TabButton :is-active="activeTab === 'content'" @click="activeTab = 'content'"> Conteúdo </TabButton>
             </li>
@@ -43,9 +43,6 @@
           </div>
           <CommentsSection v-if="activeTab === 'comments'" :comentarios="comentarios" @add-comment="adicionarComentario" />
         </div>
-      </main>
-      <main v-else class="flex items-center justify-center flex-1 h-screen p-8 ml-0 overflow-y-auto bg-gray-200 lg:ml-80 dark:bg-gray-900">
-        <p class="text-lg text-gray-500 dark:text-gray-400">Selecione uma aula para ver o conteúdo.</p>
       </main>
     </div>
   </div>
