@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-import { colors, darkColors, textColors, backgroundColors, borderColors } from './src/theme/colors';
 
 export default {
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
