@@ -30,7 +30,9 @@
     </ul>
     <div class="flex items-center p-4 border-t border-gray-200 dark:border-dark-border">
       <UserCircleIcon class="w-8 h-8 text-gray-600 dark:text-gray-300" />
-      <span class="ml-2 font-semibold text-gray-700 dark:text-gray-300">User</span>
+      <router-link to="/user-edit" class="flex items-center transition-colors hover:text-blue-500">
+        <span class="ml-2 font-semibold text-gray-700 dark:text-gray-300">User</span>
+      </router-link>
       <button @click="$emit('toggle-dark-mode')" class="ml-auto focus:outline-none" :aria-label="darkMode ? 'Ativar modo claro' : 'Ativar modo escuro'">
         <SunIcon v-if="darkMode" class="w-6 h-6 text-gray-600 dark:text-gray-300" />
         <MoonIcon v-else class="w-6 h-6 text-gray-600 dark:text-gray-300" />

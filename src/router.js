@@ -4,6 +4,7 @@ import Home from './pages/Home.vue';
 import Login from './pages/Login.vue';
 import Signup from './pages/Signup.vue';
 import NotFound from './pages/NotFound.vue';
+import UserEditPage from './pages/UserEditPage.vue';
 
 const routes = [
   {
@@ -32,6 +33,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup,
+  },
+  {
+    path: '/user-edit',
+    name: 'UserEdit',
+    component: UserEditPage,
   },
   {
     path: '/:pathMatch(.*)*',
