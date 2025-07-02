@@ -1,14 +1,14 @@
 <template>
-  <div class="min-h-screen p-4 text-gray-300 bg-gray-900 sm:p-6 lg:p-8 font-inter">
+  <div class="min-h-screen p-4 font-inter bg-gray-100 text-gray-900 dark:bg-dark-background dark:text-dark-text sm:p-6 lg:p-8">
     <!-- Layout principal -->
     <div class="mx-auto max-w-7xl">
-      <h1 class="mb-8 text-3xl font-bold text-white">Meu Perfil</h1>
+      <h1 class="mb-8 text-3xl font-bold text-gray-900 dark:text-dark-title">Meu Perfil</h1>
 
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <!-- Coluna da Esquerda (Formulário e Assinatura) -->
         <div class="space-y-8 lg:col-span-2">
           <!-- UserProfile.vue: Componente container -->
-          <div class="p-6 bg-gray-800 rounded-lg shadow-lg">
+          <div class="p-6 bg-white rounded-lg shadow-lg dark:bg-dark-backgroundTab">
             <div class="flex flex-col items-center space-y-6 sm:flex-row sm:space-y-0 sm:space-x-6">
               <!-- UserAvatar.vue: Componente do Avatar -->
               <div class="relative cursor-pointer group" @click="triggerFileUpload">
@@ -30,40 +30,40 @@
 
               <!-- UserInfoForm.vue: Formulário de Informações -->
               <div class="flex-grow w-full">
-                <h2 class="mb-4 text-2xl font-semibold text-white">Editar Informações</h2>
+                <h2 class="mb-4 text-2xl font-semibold text-gray-900 dark:text-dark-title">Editar Informações</h2>
                 <form @submit.prevent="saveProfile" class="space-y-4">
                   <div>
-                    <label for="name" class="block text-sm font-medium text-gray-400">Nome</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-dark-text">Nome</label>
                     <input
                       type="text"
                       id="name"
                       v-model="form.name"
-                      class="block w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      class="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-dark-backgroundTab dark:text-dark-text dark:border-dark-border"
                     />
                   </div>
                   <div>
-                    <label for="password" class="block text-sm font-medium text-gray-400">Nova Senha</label>
+                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-dark-text">Nova Senha</label>
                     <input
                       type="password"
                       id="password"
                       v-model="form.password"
-                      class="block w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      class="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-dark-backgroundTab dark:text-dark-text dark:border-dark-border"
                     />
                   </div>
                   <div>
-                    <label for="confirm_password" class="block text-sm font-medium text-gray-400">Confirmar Nova Senha</label>
+                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-dark-text">Confirmar Nova Senha</label>
                     <input
                       type="password"
                       id="confirm_password"
                       v-model="form.confirmPassword"
-                      class="block w-full px-3 py-2 mt-1 text-white bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                      class="block w-full px-3 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-dark-backgroundTab dark:text-dark-text dark:border-dark-border"
                     />
                   </div>
                   <div class="text-right">
                     <button
                       type="submit"
                       :disabled="!isFormDirty"
-                      class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white transition-colors bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed"
+                      class="inline-flex justify-center px-4 py-2 text-sm font-medium text-white transition-colors bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed dark:bg-blue-700 dark:hover:bg-blue-800"
                     >
                       Salvar Alterações
                     </button>
@@ -74,16 +74,16 @@
           </div>
 
           <!-- UserActivityTabs.vue: Abas de Atividade -->
-          <div class="p-6 bg-gray-800 rounded-lg shadow-lg">
-            <h2 class="mb-4 text-xl font-semibold text-white">Minhas Atividades</h2>
+          <div class="p-6 bg-white rounded-lg shadow-lg dark:bg-dark-backgroundTab">
+            <h2 class="mb-4 text-xl font-semibold text-gray-900 dark:text-dark-title">Minhas Atividades</h2>
             <!-- Sistema de Abas -->
-            <div class="border-b border-gray-700">
+            <div class="border-b border-gray-200 dark:border-dark-border">
               <nav class="flex -mb-px space-x-6" aria-label="Tabs">
                 <button
                   @click="activeTab = 'liked'"
                   :class="[
                     'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
-                    activeTab === 'liked' ? 'border-blue-500 text-white' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500',
+                    activeTab === 'liked' ? 'border-blue-500 text-blue-600 dark:text-dark-title' : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-200 dark:hover:border-dark-border',
                   ]"
                 >
                   Aulas Curtidas
@@ -92,7 +92,7 @@
                   @click="activeTab = 'comments'"
                   :class="[
                     'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
-                    activeTab === 'comments' ? 'border-blue-500 text-white' : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500',
+                    activeTab === 'comments' ? 'border-blue-500 text-blue-600 dark:text-dark-title' : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-200 dark:hover:border-dark-border',
                   ]"
                 >
                   Meus Comentários
@@ -105,12 +105,12 @@
               <!-- LessonsList.vue: Lista de Aulas Curtidas -->
               <div v-if="activeTab === 'liked'">
                 <ul class="space-y-4">
-                  <li v-for="lesson in likedLessons" :key="lesson.id" class="flex items-center p-3 transition-colors bg-gray-700 rounded-md hover:bg-gray-600">
+                  <li v-for="lesson in likedLessons" :key="lesson.id" class="flex items-center p-3 transition-colors bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-dark-backgroundTab dark:hover:bg-dark-hover">
                     <!-- Ícone de Coração (Heroicons) -->
                     <svg class="w-6 h-6 mr-4 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                       <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                     </svg>
-                    <span class="text-white">{{ lesson.title }}</span>
+                    <span class="text-gray-900 dark:text-dark-title">{{ lesson.title }}</span>
                   </li>
                 </ul>
               </div>
@@ -118,7 +118,7 @@
               <!-- LessonsList.vue: Lista de Comentários -->
               <div v-if="activeTab === 'comments'">
                 <ul class="space-y-4">
-                  <li v-for="comment in commentedLessons" :key="comment.id" class="p-3 transition-colors bg-gray-700 rounded-md hover:bg-gray-600">
+                  <li v-for="comment in commentedLessons" :key="comment.id" class="p-3 transition-colors bg-gray-100 rounded-md hover:bg-gray-200 dark:bg-dark-backgroundTab dark:hover:bg-dark-hover">
                     <div class="flex items-start">
                       <!-- Ícone de Comentário (Heroicons) -->
                       <svg class="flex-shrink-0 w-6 h-6 mt-1 mr-4 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -130,8 +130,8 @@
                         />
                       </svg>
                       <div>
-                        <p class="font-semibold text-white">{{ comment.title }}</p>
-                        <p class="mt-1 text-sm italic text-gray-400">"{{ comment.snippet }}"</p>
+                        <p class="font-semibold text-gray-900 dark:text-dark-title">{{ comment.title }}</p>
+                        <p class="mt-1 text-sm italic text-gray-500 dark:text-gray-400">"{{ comment.snippet }}"</p>
                       </div>
                     </div>
                   </li>
@@ -144,7 +144,7 @@
         <!-- Coluna da Direita (Assinatura) -->
         <div class="lg:col-span-1">
           <!-- UserSubscription.vue: Card de Assinatura -->
-          <div class="p-6 text-white rounded-lg shadow-lg bg-gradient-to-br from-blue-600 to-indigo-700">
+          <div class="p-6 rounded-lg shadow-lg bg-gradient-to-br from-blue-600 to-indigo-700 text-white dark:from-blue-800 dark:to-indigo-900">
             <div class="flex items-center mb-4">
               <!-- Ícone de Coroa (Heroicons) -->
               <svg class="w-8 h-8 mr-3 text-yellow-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -157,6 +157,26 @@
               <p class="text-lg font-semibold">{{ formattedExpiresAt }}</p>
             </div>
           </div>
+
+          <!-- Preferência de Tema -->
+          <div class="mt-6 p-6 rounded-lg shadow-lg bg-white text-gray-900 dark:bg-dark-backgroundTab dark:text-dark-title">
+            <div class="flex items-center mb-4">
+              <!-- Ícone de Tema (Heroicons) -->
+              <svg v-if="darkMode" class="w-7 h-7 mr-3 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m8.66-13.66l-.71.71M4.05 19.95l-.71.71M21 12h-1M4 12H3m16.66 5.66l-.71-.71M4.05 4.05l-.71-.71M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+              <svg v-else class="w-7 h-7 mr-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3a7 7 0 109.79 9.79z"></path></svg>
+              <h2 class="text-lg font-bold">Tema do site</h2>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" class="form-radio text-blue-600" :checked="darkMode" @change="setTheme(true)" name="theme" />
+                <span class="ml-2">Modo Escuro</span>
+              </label>
+              <label class="inline-flex items-center cursor-pointer">
+                <input type="radio" class="form-radio text-blue-600" :checked="!darkMode" @change="setTheme(false)" name="theme" />
+                <span class="ml-2">Modo Claro</span>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -164,7 +184,8 @@
 </template>
 
 <script>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
+import { useDarkMode } from '../composables/useDarkMode';
 
 export default {
   name: 'UserProfile',
@@ -267,6 +288,15 @@ export default {
       });
     });
 
+    // --- DARK MODE ---
+    const { darkMode, toggleDarkMode } = useDarkMode();
+    // Função para definir tema explicitamente
+    const setTheme = (isDark) => {
+      if (darkMode.value !== isDark) {
+        toggleDarkMode();
+      }
+    };
+
     return {
       user,
       subscription,
@@ -280,6 +310,8 @@ export default {
       handleFileChange,
       activeTab,
       formattedExpiresAt,
+      darkMode,
+      setTheme,
     };
   },
 };
